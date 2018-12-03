@@ -5546,7 +5546,7 @@ class Response
 // file: src/index.php
 
 require_once './config.php';
-require_once './login.php';
+require_once './conf.inc.php';
 
 $config = new Config([
     'driver' => 'mysql',
