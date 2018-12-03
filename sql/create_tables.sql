@@ -9,7 +9,7 @@ INSERT INTO auth_levels (auth_desciption) VALUES ('Guest'), ('User'), ('Admin'),
 CREATE TABLE users (
     user_id INT NOT NULL AUTO_INCREMENT,
     login VARCHAR(25) NOT NULL UNIQUE,
-    password CHAR(64) NOT NULL,
+    password VARCHAR(255) NOT NULL,
     auth_level INT NOT NULL DEFAULT 0,
     PRIMARY KEY (user_id),
     FOREIGN KEY (auth_level) REFERENCES auth_levels(auth_level)
