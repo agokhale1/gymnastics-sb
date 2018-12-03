@@ -1,9 +1,9 @@
 <?php
     abstract class ApiMode {
-        const __default = self::Prod;
-
-        const Dev = 0;
-        const Prod = 1;
+        const DebugQueries = -1;
+        const Debug = 0;
+        const Dev = 1;
+        const Prod = 2;
     }
 
     // Turn on/off debug mode

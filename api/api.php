@@ -7,6 +7,8 @@
 
 namespace Tqdev\PhpCrudApi;
 
+require_once './config.php';
+
 // file: src/Tqdev/PhpCrudApi/Cache/Cache.php
 
 interface Cache
@@ -5482,12 +5484,24 @@ class Response
 
     private function parseBody($body)
     {
+        global $mode;
+
         if ($body === '') {
             $this->body = '';
         } else {
             $data = json_encode($body, JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
-            $this->addHeader('Content-Type', 'application/json');
-            $this->addHeader('Content-Length', strlen($data));
+
+            // Show PHP warning properly
+            if ($mode <= \ApiMode::Debug)
+            {
+                $this->addHeader('Content-Type', 'text/html');
+            }
+            else
+            {
+                $this->addHeader('Content-Type', 'application/json');
+                $this->addHeader('Content-Length', strlen($data));
+            }
+
             $this->body = $data;
         }
     }
@@ -5545,8 +5559,10 @@ class Response
 
 // file: src/index.php
 
-require_once './config.php';
 require_once './conf.inc.php';
+
+// Authenticate the user
+require_once './auth.php';
 
 $config = new Config([
     'driver' => 'mysql',
@@ -5556,7 +5572,39 @@ $config = new Config([
     'database' => $db_name,
     'middlewares' => 'authorization, sanitation',
     'authorization.tableHandler' => function ($operation, $tableName) {
-        return $tableName !== 'auth_levels';
+        global $auth;
+
+        if ($auth == \AuthLevels::SuperUser)
+        {
+            return in_array($operation, \AuthLevels::SuperUserAbilities) && !in_array($tableName, \AuthLevels::SuperUserRestrictedTables);
+        }
+        else if ($auth == \AuthLevels::Admin)
+        {
+            return in_array($operation, \AuthLevels::AdminAbilities) && !in_array($tableName, \AuthLevels::AdminRestrictedTables);
+        }
+        else if ($auth == \AuthLevels::User)
+        {
+            return in_array($operation, \AuthLevels::UserAbilities) && !in_array($tableName, \AuthLevels::UserRestrictedTables);
+        }
+        else if ($auth == \AuthLevels::Guest)
+        {
+            if (!(in_array($operation, \AuthLevels::GuestAbilities) && !in_array($tableName, \AuthLevels::GuestRestrictedTables)))
+            {
+                requiresAuth();
+                return false;
+            }
+
+            return true;
+        }
+
+        return false;
+    },
+    'sanitation.handler' => function ($operation, $tableName, $column, $value) {
+        if (is_string($value))
+        {
+            $value = strip_tag($value);
+            $value = mysqli_escape_string($link, $value);
+        }
     },
     'openApiBase' => '{
         "info": {
@@ -5564,12 +5612,14 @@ $config = new Config([
             "version": "1.0.0"
         }
     }',
-    'debug' => $mode === \ApiMode::Dev
+    'debug' => ($mode <= \ApiMode::Dev)
 ]);
 
 $request = new Request();
 $api = new Api($config);
 $response = $api->handle($request);
 $response->output();
+
+mysqli_close($conn);
 
 ?>
