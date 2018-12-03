@@ -1,4 +1,4 @@
-api/config.php
+api/conf.inc.php
 api/config/db.inc.php
 
 dev/
