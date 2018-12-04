@@ -1,5 +1,5 @@
-<nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="#">Gymnastics Scoreboard</a>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" routerLink="/" routerLinkActive="">Gymnastics Scoreboard</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
         aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -8,21 +8,24 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
-                <a class="nav-link" href="#">Meets</a>
+                <a class="nav-link" routerLink="/meets" routerLinkActive="">Meets</a>
             </li>
             <li class="nav-item active">
-                <a class="nav-link" href="#">Gyms</a>
+                <a class="nav-link" routerLink="/gyms" routerLinkActive="">Gyms</a>
             </li>
         </ul>
 
         <form class="form-inline my-2 my-lg-0">
             <div class="input-group mr-sm-4">
                 <div class="input-group-prepend">
-                    <span class="input-group-text" id="basic-addon3">Search</span>
+                    <span class="btn input-group-text" id="basic-addon3">Search</span>
                 </div>
                 <input class="form-control" id="basic-url" type="search" placeholder="Gymnast Name" aria-describedby="basic-addon3">
             </div>
-            <button class="btn btn-outline-light my-2 my-sm-0" type="button">Sign In</button>
         </form>
+
+        <button routerLink="/login" routerLinkActive="" class="btn btn-outline-light my-2 my-sm-0">Sign In</button>
+        <button (click)="logout()" class="btn btn-outline-light my-2 my-sm-0">Sign Out</button>
+
     </div>
 </nav>

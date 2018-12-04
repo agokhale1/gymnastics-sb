@@ -1,13 +1,13 @@
 export enum AUTH_LEVEL {
-    GUEST = 'Guest',
-    USER = 'User',
-    ADMIN = 'Admin',
-    SUPERUSER = 'SuperUser'
+    GUEST = 0,
+    USER = 1,
+    ADMIN = 2,
+    SUPERUSER = 3
 }
 
 export interface User {
     id: number;
     login: string;
     password: string;
-    auth_level: AUTH_LEVEL;
+    authLevel: AUTH_LEVEL;
 }
