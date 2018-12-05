@@ -1,5 +1,5 @@
 export interface Gym {
     gym_id: number;
-    name: string;
-    logoUrl: string;
+    gym_name: string;
+    gym_logo_url: string;
 }

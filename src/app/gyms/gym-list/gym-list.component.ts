@@ -11,31 +11,7 @@ export class GymListComponent implements OnInit {
     gyms: Gym[] = [];
 
     constructor() {
-        this.gyms.push({
-            id: 0,
-            name: 'Zero',
-            logoUrl: '#'
-        },
-        {
-            id: 1,
-            name: 'One',
-            logoUrl: '#'
-        },
-        {
-            id: 2,
-            name: 'Two',
-            logoUrl: '#'
-        },
-        {
-            id: 3,
-            name: 'Three',
-            logoUrl: '#'
-        },
-        {
-            id: 4,
-            name: 'Four',
-            logoUrl: '#'
-        });
+        this.gyms = [];
     }
 
     ngOnInit() { }

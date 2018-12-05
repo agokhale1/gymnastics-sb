@@ -1,14 +1,11 @@
 import { Gym } from './gym.interface';
 
-export enum GYMNAST_LEVEL {
-    NA = 'N/A'
-}
-
 export interface Gymnast {
     gymnast_id: number;
-    gym: Gym;
-    active: boolean;
-    firstName: string;
-    lastName: string;
-    level: GYMNAST_LEVEL;
+    gym_id: Gym;
+    gymnast_active: boolean;
+    gymnast_first_name: string;
+    gymnast_last_name: string;
+    gymnast_level: string;
+    gymnast_img_url: string;
 }

@@ -6,17 +6,7 @@ export interface Config {
 
 export let config: Config;
 
-if (process.env.NODE_ENV === 'production') {
-    config = {
-        apiUrl: 'http://gymscoreboard.tk/api'
-    };
-
-    console.log('Running with prod environment');
-} else {
-    config = {
-        // apiUrl: 'http://localhost:8080/api/api.php'
-        apiUrl: 'http://gymscoreboard.tk/api'
-    };
-
-    console.log('Running with dev environment');
-}
+config = {
+    // apiUrl: 'http://localhost:8080/api/api.php'
+    apiUrl: 'http://gymscoreboard.tk/api'
+};

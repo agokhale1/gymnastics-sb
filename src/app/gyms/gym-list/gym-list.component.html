@@ -11,12 +11,12 @@
     </thead>
     <tbody>
         <tr *ngFor="let gym of gyms">
-            <td class="text-center">{{ gym.id }}</td>
-            <td class="text-center">{{ gym.name }}</td>
+            <td class="text-center">{{ gym.gym_id }}</td>
+            <td class="text-center">{{ gym.gym_name }}</td>
             <td class="text-center">0</td>
             <td class="text-center">
-                <button [routerLink]="['view', gym.id]" class="btn mr-2 material-icons">search</button>
-                <button [routerLink]="['edit', gym.id]" class="btn mr-2 material-icons">edit</button>
+                <button [routerLink]="['view', gym.gym_id]" class="btn mr-2 material-icons">search</button>
+                <button [routerLink]="['edit', gym.gym_id]" class="btn mr-2 material-icons">edit</button>
                 <button class="btn material-icons">delete</button>
             </td>
         </tr>

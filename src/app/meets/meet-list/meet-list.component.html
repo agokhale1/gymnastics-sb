@@ -12,13 +12,13 @@
     </thead>
     <tbody>
         <tr *ngFor="let meet of meets">
-            <td class="text-center">{{ meet.id }}</td>
-            <td class="text-center">{{ meet.title }}</td>
-            <td class="text-center">{{ meet.date }}</td>
-            <td class="text-center">{{ meet.location }}</td>
+            <td class="text-center">{{ meet.meet_id }}</td>
+            <td class="text-center">{{ meet.meet_title }}</td>
+            <td class="text-center">{{ meet.meet_date }}</td>
+            <td class="text-center">{{ meet.meet_location }}</td>
             <td class="text-center">
-                <button [routerLink]="['view', meet.id]" class="btn mr-2 material-icons">search</button>
-                <button [routerLink]="['edit', meet.id]" class="btn mr-2 material-icons">edit</button>
+                <button [routerLink]="['view', meet.meet_id]" class="btn mr-2 material-icons">search</button>
+                <button [routerLink]="['edit', meet.meet_id]" class="btn mr-2 material-icons">edit</button>
                 <button class="btn material-icons">delete</button>
             </td>
         </tr>

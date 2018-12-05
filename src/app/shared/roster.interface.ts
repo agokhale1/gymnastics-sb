@@ -3,6 +3,6 @@ import { Gymnast } from './gymnast.interface';
 
 export interface Roster {
     roster_id: number;
-    gym: Gym;
-    gymnasts: Gymnast[];
+    roster_gym: Gym;
+    roster_gymnasts: Gymnast[];
 }
