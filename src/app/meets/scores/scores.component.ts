@@ -1,77 +1,39 @@
 import { Component, OnInit } from '@angular/core';
-import { Gymnast } from 'src/app/shared/gymnast.interface';
+import { Score } from 'src/app/shared/score.interface';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { config } from 'src/app/_services/config.interface';
 import { ApiResponse } from 'src/app/shared/api-response.interface';
 import { AuthService } from 'src/app/_services/auth.service';
 import { User, AUTH_LEVEL } from 'src/app/shared/user.interface';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { Gym } from 'src/app/shared/gym.interface';
 
 
 import * as $ from 'jquery';
 import { Router } from '@angular/router';
+import { Meet } from 'src/app/shared/meet.interface';
 
 @Component({
-    selector: 'app-gymnast-list',
-    templateUrl: './gymnast-list.component.html',
-    styleUrls: ['./gymnast-list.component.css']
+    selector: 'app-scores',
+    templateUrl: './scores.component.html',
+    styleUrls: ['./scores.component.css']
 })
-export class GymnastListComponent implements OnInit {
+export class ScoresComponent implements OnInit {
 
-    gymnasts: Gymnast[] = [];
-    gyms: Gym[] = [];
-    currentGymnast: Gymnast = null;
+    meet: Meet;
+    scores: Score[] = [];
 
     private isNotGuest = false;
 
-    addGymnastForm: FormGroup;
+    editForm: FormGroup;
     submitted = false;
 
     constructor(private http: HttpClient, private authService: AuthService, private fb: FormBuilder, private router: Router) {
         this.authService.currentUser.subscribe((user: User) => {
             this.isNotGuest = user !== null && user.auth_level > AUTH_LEVEL.GUEST;
         });
-
-        this.addGymnastForm = this.fb.group({
-            gymnast_first_name: ['', [Validators.required, Validators.maxLength(25)]],
-            gymnast_last_name: ['', [Validators.required, Validators.maxLength(35)]],
-            gym_id: ['', Validators.nullValidator],
-            gymnast_level: ['', [Validators.required, Validators.maxLength(15)]]
-        });
-
-        // Fetch all gymnasts
-        this.http.get<ApiResponse<Gymnast>>(`${config.apiUrl}/records/gymnasts?join=gyms`)
-        .subscribe((resp: ApiResponse<Gymnast>) => {
-
-            console.log(resp);
-            console.log(resp.records[0].gym_id);
-
-            if (resp) {
-                this.gymnasts = resp.records;
-            } else {
-                this.gymnasts = [];
-            }
-        });
-
-        // Fetch all gyms
-        this.http.get<ApiResponse<Gym>>(`${config.apiUrl}/records/gyms`)
-        .subscribe((resp: ApiResponse<Gym>) => {
-
-            console.log(resp);
-
-            if (resp) {
-                this.gyms = resp.records;
-            } else {
-                this.gyms = [];
-            }
-        });
     }
 
-    ngOnInit() { }
-
-    get form() {
-        return this.addGymnastForm.controls;
+    ngOnInit() {
     }
 
     toggleModal() {
@@ -125,7 +87,7 @@ export class GymnastListComponent implements OnInit {
     edit(id: number) {
         this.toggleModal();
 
-        this.currentGymnast = this.gymnasts.find(function(val, i, arr) {
+        this.currentGymnast = this.gymnasts.find(function (val, i, arr) {
             return val.gymnast_id === id;
         });
 
@@ -134,16 +96,16 @@ export class GymnastListComponent implements OnInit {
 
     delete(id: number) {
         this.http.delete<HttpResponse<any>>(`${config.apiUrl}/records/gymnasts/${id}`, { observe: 'response' })
-        .subscribe((resp: HttpResponse<any>) => {
-            if (!resp.ok) {
-                alert(`Could not delete gymnast.\nHTTP Response: ${resp.status} ${resp.statusText}`);
-            } else {
-                // Remove entry
-                this.gymnasts = this.gymnasts.filter((gymnast, i, arr) => {
-                    return gymnast.gymnast_id !== id;
-                });
-            }
-        });
+            .subscribe((resp: HttpResponse<any>) => {
+                if (!resp.ok) {
+                    alert(`Could not delete gymnast.\nHTTP Response: ${resp.status} ${resp.statusText}`);
+                } else {
+                    // Remove entry
+                    this.gymnasts = this.gymnasts.filter((gymnast, i, arr) => {
+                        return gymnast.gymnast_id !== id;
+                    });
+                }
+            });
     }
 
 }

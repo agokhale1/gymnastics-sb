@@ -1,0 +1,26 @@
+<button *ngIf="isNotGuest" class="btn btn-dark material-icons" id="addScore">add</button>
+
+<table class="table table-hover table-bordered">
+    <thead class="thead">
+        <tr>
+            <th width="2%" class="text-center">ID</th>
+            <th class="text-center">Meet</th>
+            <th class="text-center">Date</th>
+            <th class="text-center">Location</th>
+            <th width="9%" class="text-center">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let meet of meets">
+            <td class="text-center">{{ meet.meet_id }}</td>
+            <td class="text-center">{{ meet.meet_title }}</td>
+            <td class="text-center">{{ meet.meet_date }}</td>
+            <td class="text-center">{{ meet.meet_location }}</td>
+            <td class="text-center">
+                <button class="btn mt-1 mr-2 material-icons">search</button>
+                <button class="btn mt-1 mr-2 material-icons">edit</button>
+                <button class="btn mt-1 mr-2 material-icons">delete</button>
+            </td>
+        </tr>
+    </tbody>
+</table>
