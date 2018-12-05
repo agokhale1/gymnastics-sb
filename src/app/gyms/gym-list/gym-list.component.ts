@@ -143,13 +143,26 @@ export class GymListComponent implements OnInit {
             } else {
                 console.log(resp.body);
 
-                for (let i in this.gyms) {
-                    if(this.gyms[i].gym_id === gym_id)
-                    {
-                        this.gyms[i] = this.gym;
-                        break;
+                // Fetch the updated item
+                this.http.get<Gym>(`${config.apiUrl}/records/meets/${gym_id}`)
+                .subscribe((newResp: Gym) => {
+
+                    console.log(newResp);
+
+                    if (resp) {
+                        this.gym = newResp;
+
+                        for (let i = 0; i < this.gyms.length; i++) {
+                            if (this.gyms[i].gym_id === gym_id)
+                            {
+                                this.gyms[i] = this.gym;
+                                break;
+                            }
+                        }
+                    } else {
+                        this.gym = null;
                     }
-                }
+                });
 
                 // Navigate back to the list
                 this.router.navigateByUrl(`/gyms#${gym_id}`);

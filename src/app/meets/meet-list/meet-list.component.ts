@@ -146,13 +146,26 @@ export class MeetListComponent implements OnInit {
             } else {
                 console.log(resp.body);
 
-                for (let i in this.meets) {
-                    if(this.meets[i].meet_id === meet_id)
-                    {
-                        this.meets[i] = this.meet;
-                        break;
+                // Fetch the updated item
+                this.http.get<Meet>(`${config.apiUrl}/records/meets/${meet_id}`)
+                .subscribe((newResp: Meet) => {
+
+                    console.log(newResp);
+
+                    if (resp) {
+                        this.meet = newResp;
+
+                        for (let i = 0; i < this.meets.length; i++) {
+                            if (this.meets[i].meet_id === meet_id)
+                            {
+                                this.meets[i] = this.meet;
+                                break;
+                            }
+                        }
+                    } else {
+                        this.meet = null;
                     }
-                }
+                });
 
                 // Navigate back to the list
                 this.router.navigateByUrl(`/meets#${meet_id}`);

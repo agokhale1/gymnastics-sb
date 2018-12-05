@@ -160,13 +160,26 @@ export class GymnastListComponent implements OnInit {
             } else {
                 console.log(resp.body);
 
-                for (let i in this.gymnasts) {
-                    if(this.gymnasts[i].gymnast_id === gymnast_id)
-                    {
-                        this.gymnasts[i] = this.currentGymnast;
-                        break;
+                // Fetch the updated item
+                this.http.get<Gymnast>(`${config.apiUrl}/records/meets/${gymnast_id}`)
+                .subscribe((newResp: Gymnast) => {
+
+                    console.log(newResp);
+
+                    if (resp) {
+                        this.currentGymnast = newResp;
+
+                        for (let i = 0; i < this.gymnasts.length; i++) {
+                            if (this.gymnasts[i].gymnast_id === gymnast_id)
+                            {
+                                this.gymnasts[i] = this.currentGymnast;
+                                break;
+                            }
+                        }
+                    } else {
+                        this.currentGymnast = null;
                     }
-                }
+                });
 
                 // Navigate back to the list
                 this.router.navigateByUrl(`/gymnasts#${gymnast_id}`);

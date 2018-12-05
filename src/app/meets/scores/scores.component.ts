@@ -177,6 +177,7 @@ export class ScoresComponent implements OnInit {
             } else {
                 console.log(resp.body);
 
+                // Fetch the updated item
                 this.http.get<Score>(`${config.apiUrl}/records/scores/${score_id}?join=gymnasts&join=meets&join=events`)
                 .subscribe((newResp: Score) => {
 
