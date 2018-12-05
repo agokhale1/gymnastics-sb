@@ -1,3 +1,6 @@
 RewriteEngine On
+
+RewriteRule ^/?(authenticate)$ $1.php [L]
+
 RewriteCond %{REQUEST_URI} !/api.php
 RewriteRule ^/?(.*)$ api.php/$1

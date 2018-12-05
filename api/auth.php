@@ -20,6 +20,7 @@
 
     function requiresAuth()
     {
+        http_response_code(401);
         header('WWW-Authenticate: Basic realm="Gymnastics-Scoreboard-API"');
         header('HTTP/1.0 401 Unauthorized');
         echo 'Please authenticate to perform the requested operation.<br>';
@@ -43,6 +44,13 @@
         }
     }
 
+    // Authenticate the user if they sent a username and password in the request
+    if (isset($request_vars['username']) && isset($request_vars['password']))
+    {
+        $_SERVER['PHP_AUTH_USER'] = $request_vars['username'];
+        $_SERVER['PHP_AUTH_PW'] = $request_vars['password'];
+    }
+
     // Construct user query
     $query = "SELECT * FROM users WHERE login = ";
     $query .= sqlStringParam($_SERVER['PHP_AUTH_USER']);
@@ -61,12 +69,18 @@
 
     // Initialize the global auth level
     $auth = AuthLevels::Guest;
+    $user = null;
 
     // Check if the user's password matches
     $row = mysqli_fetch_assoc($result);
     if ($row && isset($_SERVER['PHP_AUTH_PW']) && password_verify($_SERVER['PHP_AUTH_PW'], $row['password']))
     {
         $auth = $row['auth_level'];
+        $user = array(
+            'id' => $row['user_id'],
+            'login' => $row['login'],
+            'auth_level' => $row['auth_level']
+        );
     }
     else
     {
