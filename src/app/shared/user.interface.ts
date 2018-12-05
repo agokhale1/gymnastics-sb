@@ -17,5 +17,5 @@ export interface User {
     login: string;
     password: string;
     auth_level: AUTH_LEVEL;
-    authHeader?: string;
+    authToken?: string;
 }

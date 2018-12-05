@@ -4,6 +4,7 @@ import { User, AUTH_LEVEL } from 'src/app/shared/user.interface';
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 
 import { map } from 'rxjs/operators';
+import { config } from './config.interface';
 
 @Injectable({
     providedIn: 'root'
@@ -31,7 +32,7 @@ export class AuthService {
         const headers = new HttpHeaders()
         .set('Content-Type', 'application/x-www-form-urlencoded');
 
-        return this.http.post('http://gymscoreboard.tk/api/authenticate',
+        return this.http.post(`${config.apiUrl}/authenticate`,
         body.toString(),
         {
             headers: headers
@@ -42,7 +43,7 @@ export class AuthService {
             if (user) {
                 console.log('API auth returned true');
 
-                user.authHeader = 'Authorization: Basic ' + window.btoa(username + ':' + password);
+                user.authToken = window.btoa(username + ':' + password);
                 this.currentUserSubject.next(user);
                 localStorage.setItem('currentUser', JSON.stringify(this.currentUserValue));
 
