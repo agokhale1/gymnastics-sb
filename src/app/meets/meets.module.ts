@@ -4,6 +4,7 @@ import { Route, RouterModule, Router } from '@angular/router';
 
 import { MeetDetailComponent } from './meet-detail/meet-detail.component';
 import { MeetListComponent } from './meet-list/meet-list.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 const routes: Route[] = [
     { path: 'view/:id', component: MeetDetailComponent },
@@ -17,6 +18,7 @@ const routes: Route[] = [
     ],
     imports: [
         CommonModule,
+        ReactiveFormsModule,
         RouterModule.forChild(routes)
     ]
 })

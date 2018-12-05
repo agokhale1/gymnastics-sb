@@ -6,6 +6,11 @@ import { config } from 'src/app/_services/config.interface';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { AuthService } from 'src/app/_services/auth.service';
 import { AUTH_LEVEL, User } from 'src/app/shared/user.interface';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+
+import * as $ from 'jquery';
+import { updateBinding } from '@angular/core/src/render3/instructions';
 
 @Component({
     selector: 'app-meet-list',
@@ -14,12 +19,29 @@ import { AUTH_LEVEL, User } from 'src/app/shared/user.interface';
 })
 export class MeetListComponent implements OnInit {
 
+    meet: Meet = {
+        meet_id: 0,
+        meet_title: '',
+        meet_date: Date.now().toString(),
+        meet_location: ''
+    };
+
     meets: Meet[] = [];
     private isNotGuest = false;
 
-    constructor(private http: HttpClient, private authService: AuthService) {
+    addMeetForm: FormGroup;
+    submitted = false;
+    isUpdate = false;
+
+    constructor(private http: HttpClient, private authService: AuthService, private fb: FormBuilder, private router: Router) {
         this.authService.currentUser.subscribe((user: User) => {
             this.isNotGuest = user !== null && user.auth_level > AUTH_LEVEL.GUEST;
+        });
+
+        this.addMeetForm = this.fb.group({
+            meet_title: ['', [Validators.maxLength(100)]],
+            meet_date: ['', [Validators.required, Validators.maxLength(100)]],
+            meet_location: ['', [Validators.maxLength(100)]]
         });
 
         this.http.get<ApiResponse<Meet>>(`${config.apiUrl}/records/meets`)
@@ -48,6 +70,108 @@ export class MeetListComponent implements OnInit {
                     return meet.meet_id !== id;
                 });
             }
+        });
+    }
+
+    get form() {
+        return this.addMeetForm.controls;
+    }
+
+    resetModal() {
+        this.submitted = false;
+
+        $('#addMeetModal').modal('toggle');
+        $('#addMeetModal').on('hidden.bs.modal', function () {
+            $(this).find('form').trigger('reset');
+        });
+    }
+
+    edit(id: number) {
+        this.http.get<Meet>(`${config.apiUrl}/records/meets/${id}`)
+        .subscribe((resp: Meet) => {
+
+            console.log(resp);
+
+            if (resp) {
+                this.meet = resp;
+                this.addMeetForm.patchValue(this.meet);
+                $('#addMeetModal').modal('toggle');
+            } else {
+                this.meet = null;
+            }
+        });
+        this.isUpdate = true;
+    }
+
+    update() {
+        const meet_id = this.meet.meet_id;
+        this.meet = this.addMeetForm.value;
+        this.meet.meet_id = meet_id;
+        console.log(this.meet);
+
+        this.http.put<number>(`${config.apiUrl}/records/meets/${meet_id}`,
+            this.meet,
+            { observe: 'response' }
+        )
+        .subscribe((resp: HttpResponse<any>) => {
+            if (!resp.ok) {
+                alert(`Could not update meet.\nHTTP Response: ${resp.status} ${resp.statusText}`);
+            } else {
+                console.log(resp.body);
+
+                for (let i in this.meets) {
+                    if(this.meets[i].meet_id === meet_id)
+                    {
+                        this.meets[i] = this.meet;
+                        break;
+                    }
+                }
+
+                // Navigate back to the list
+                this.router.navigateByUrl(`/meets#${meet_id}`);
+                this.resetModal();
+            }
+        },
+        err => {
+            alert(`Could not update meet. Server responded with ${err.status} ${err.statusText}`);
+        });
+        this.isUpdate = false;
+    }
+
+    addMeet() {
+        this.submitted = true;
+
+        if (!this.addMeetForm.valid) {
+            return;
+        }
+
+        if(this.isUpdate)
+        {
+            this.update();
+            return;
+        }
+
+        this.meet = this.addMeetForm.value;
+        console.log(this.meet);
+
+        this.http.post<Meet>(`${config.apiUrl}/records/meets`,
+            this.meet,
+            { observe: 'response' }
+        )
+        .subscribe((resp: HttpResponse<any>) => {
+            if (!resp.ok) {
+                alert(`Could not update meet.\nHTTP Response: ${resp.status} ${resp.statusText}`);
+            } else {
+                console.log(resp.body);
+                this.meet.meet_id = resp.body;
+                this.meets.push(this.meet);
+                // Navigate back to the list
+                this.router.navigateByUrl(`/meets#${this.meet.meet_id}`);
+                this.resetModal();
+            }
+        },
+        err => {
+            alert(`Could not update meet. Server responded with ${err.status} ${err.statusText}`);
         });
     }
 

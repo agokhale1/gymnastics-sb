@@ -5,6 +5,10 @@ import { config } from 'src/app/_services/config.interface';
 import { ApiResponse } from 'src/app/shared/api-response.interface';
 import { AUTH_LEVEL, User } from 'src/app/shared/user.interface';
 import { AuthService } from 'src/app/_services/auth.service';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+
+import * as $ from 'jquery';
 
 @Component({
     selector: 'app-gym-list',
@@ -13,12 +17,26 @@ import { AuthService } from 'src/app/_services/auth.service';
 })
 export class GymListComponent implements OnInit {
 
+    gym: Gym = {
+        gym_id: 0,
+        gym_name: '',
+        gym_logo_url: ''
+    };
+
     gyms: Gym[] = [];
     private isNotGuest = false;
 
-    constructor(private http: HttpClient, private authService: AuthService) {
+    addGymForm: FormGroup;
+    submitted = false;
+
+    constructor(private http: HttpClient, private authService: AuthService, private fb: FormBuilder, private router: Router) {
         this.authService.currentUser.subscribe((user: User) => {
             this.isNotGuest = user !== null && user.auth_level > AUTH_LEVEL.GUEST;
+        });
+
+        this.addGymForm = this.fb.group({
+            gym_name: ['', [Validators.required, Validators.maxLength(100)]],
+            gym_logo_url: ['', [Validators.maxLength(255)]]
         });
 
         this.http.get<ApiResponse<Gym>>(`${config.apiUrl}/records/gyms`)
@@ -47,6 +65,66 @@ export class GymListComponent implements OnInit {
                     return gym.gym_id !== id;
                 });
             }
+        });
+    }
+
+    get form() {
+        return this.addGymForm.controls;
+    }
+
+    resetModal() {
+        this.submitted = false;
+
+        $('#addGymModal').modal('toggle');
+        $('#addGymModal').on('hidden.bs.modal', function () {
+            $(this).find('form').trigger('reset');
+        });
+    }
+
+    edit(id: number) {
+        this.http.get<Gym>(`${config.apiUrl}/records/gyms/${id}`)
+        .subscribe((resp: Gym) => {
+
+            console.log(resp);
+
+            if (resp) {
+                this.gym = resp;
+                this.addGymForm.patchValue(this.gym);
+                $('#addGymModal').modal('toggle');
+            } else {
+                this.gym = null;
+            }
+        });
+    }
+
+    addGym() {
+        this.submitted = true;
+
+        if (!this.addGymForm.valid) {
+            return;
+        }
+
+        this.gym = this.addGymForm.value;
+        console.log(this.gym);
+
+        this.http.post<Gym>(`${config.apiUrl}/records/gyms`,
+            this.gym,
+            { observe: 'response' }
+        )
+        .subscribe((resp: HttpResponse<any>) => {
+            if (!resp.ok) {
+                alert(`Could not update gym.\nHTTP Response: ${resp.status} ${resp.statusText}`);
+            } else {
+                console.log(resp.body);
+                this.gym.gym_id = resp.body;
+                this.gyms.push(this.gym);
+                // Navigate back to the list
+                this.router.navigateByUrl(`/gyms#${this.gym.gym_id}`);
+                this.resetModal();
+            }
+        },
+        err => {
+            alert(`Could not update gym. Server responded with ${err.status} ${err.statusText}`);
         });
     }
 

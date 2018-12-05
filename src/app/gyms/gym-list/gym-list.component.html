@@ -1,4 +1,42 @@
-<button *ngIf="isNotGuest" class="btn btn-dark material-icons" id="addGym">add</button>
+<button *ngIf="isNotGuest" class="btn btn-dark material-icons add-button" data-toggle="modal" data-target="#addGymModal">add</button>
+
+<div class="modal fade" id="addGymModal" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add a gym</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form [formGroup]="addGymForm" (ngSubmit)="addGym()">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Gym Name</label>
+                        <input type="text" formControlName="gym_name" class="form-control" [ngClass]="{'is-invalid': submitted && form.gym_name.errors}"
+                            placeholder="Brestyan's" autofocus>
+                        <div *ngIf="submitted && form.gym_name.errors" class="invalid-feedback">
+                            <div *ngIf="form.gym_name.errors.required">Gym name is required</div>
+                            <div *ngIf="form.gym_name.errors.maxlength">Gym name must not be over 100 characters</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Gym Url</label>
+                        <input type="url" formControlName="gym_logo_url" class="form-control" [ngClass]="{'is-invalid': submitted && form.gym_logo_url.errors}"
+                            placeholder="https://www.brestyans.com/">
+                        <div *ngIf="submitted && form.gym_logo_url.errors" class="invalid-feedback">
+                            <div *ngIf="form.gym_logo_url.errors.maxlength">Gym url must not be over 255 characters</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer form-group">
+                    <button type="button" class="btn btn-secondary" (click)="resetModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary" [disabled]="loading">Add Gym</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 <table class="table table-hover table-bordered">
     <thead class="thead">
@@ -15,9 +53,8 @@
             <td class="text-center">{{ gym.gym_name }}</td>
             <td class="text-center">0</td>
             <td class="text-center">
-                <button [routerLink]="['view', gym.gym_id]" class="btn mr-2 material-icons">search</button>
-                <button [routerLink]="['edit', gym.gym_id]" class="btn mr-2 material-icons">edit</button>
-                <button class="btn material-icons">delete</button>
+                <button class="btn mr-2 material-icons" (click)="edit(gym.gym_id)">edit</button>
+                <button class="btn material-icons" (click)="delete(gym.gym_id)">delete</button>
             </td>
         </tr>
     </tbody>

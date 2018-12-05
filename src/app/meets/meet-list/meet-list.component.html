@@ -1,4 +1,50 @@
-<button *ngIf="isNotGuest" class="btn btn-dark material-icons" id="addMeet">add</button>
+<button *ngIf="isNotGuest" class="btn btn-dark material-icons add-button" data-toggle="modal" data-target="#addMeetModal">add</button>
+
+<div class="modal fade" id="addMeetModal" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add a meet</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form [formGroup]="addMeetForm" (ngSubmit)="addMeet()">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Meet Title</label>
+                        <input type="text" formControlName="meet_title" class="form-control" [ngClass]="{'is-invalid': submitted && form.meet_title.errors}"
+                            placeholder="Brestyan's" autofocus>
+                        <div *ngIf="submitted && form.meet_title.errors" class="invalid-feedback">
+                            <div *ngIf="form.meet_title.errors.maxlength">Meet title must not be over 100 characters</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Meet Date</label>
+                        <input type="date" formControlName="meet_date" class="form-control" [ngClass]="{'is-invalid': submitted && form.meet_date.errors}">
+                        <div *ngIf="submitted && form.meet_date.errors" class="invalid-feedback">
+                            <div *ngIf="form.meet_date.errors.required">Meet date is required</div>
+                            <div *ngIf="form.meet_date.errors.maxlength">Meet date must not be over 100 characters</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Meet Location</label>
+                        <input type="text" formControlName="meet_location" class="form-control" [ngClass]="{'is-invalid': submitted && form.meet_location.errors}"
+                            placeholder="1301 3rd St, West Lafayette, IN 47906">
+                        <div *ngIf="submitted && form.meet_location.errors" class="invalid-feedback">
+                            <div *ngIf="form.meet_location.errors.maxlength">Meet location must not be over 100
+                                characters</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer form-group">
+                    <button type="button" class="btn btn-secondary" (click)="resetModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary" [disabled]="loading">Add Meet</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 <table class="table table-hover table-bordered">
     <thead class="thead">
@@ -17,9 +63,8 @@
             <td class="text-center">{{ meet.meet_date }}</td>
             <td class="text-center">{{ meet.meet_location }}</td>
             <td class="text-center">
-                <button [routerLink]="['view', meet.meet_id]" class="btn mr-2 material-icons">search</button>
-                <button [routerLink]="['edit', meet.meet_id]" class="btn mr-2 material-icons">edit</button>
-                <button class="btn material-icons">delete</button>
+                <button class="btn mr-2 material-icons" (click)="edit(meet.meet_id)">edit</button>
+                <button class="btn material-icons" (click)="delete(meet.meet_id)">delete</button>
             </td>
         </tr>
     </tbody>

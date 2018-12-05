@@ -4,6 +4,7 @@ import { Route, RouterModule } from '@angular/router';
 
 import { GymDetailComponent } from './gym-detail/gym-detail.component';
 import { GymListComponent } from './gym-list/gym-list.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 const routes: Route[] = [
     { path: 'view/:id', component: GymDetailComponent },
@@ -17,6 +18,7 @@ const routes: Route[] = [
     ],
     imports: [
         CommonModule,
+        ReactiveFormsModule,
         RouterModule.forChild(routes)
     ]
 })
