@@ -9,3 +9,9 @@ html, body {
 .container-fluid {
     padding: 0;
 }
+
+.add-button {
+    position: fixed;
+    right: 2%;
+    bottom: 2%;
+}

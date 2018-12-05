@@ -31,6 +31,13 @@ export class UserListComponent implements OnInit {
     ngOnInit() { }
 
     delete(id: number) {
+
+        // One last check with the user
+        const confirmed = confirm(`Are you sure you would like to delete user #${id}?`);
+        if (!confirmed) {
+            return;
+        }
+
         this.http.delete<HttpResponse<any>>(`${config.apiUrl}/records/users/${id}`, { observe: 'response' })
         .subscribe((resp: HttpResponse<any>) => {
             if (!resp.ok) {

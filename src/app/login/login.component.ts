@@ -4,6 +4,7 @@ import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { AuthService } from '../_services/auth.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { config } from '../_services/config.interface';
 
 @Component({
     selector: 'app-login',
@@ -33,8 +34,8 @@ export class LoginComponent implements OnInit {
         }
 
         this.loginForm = this.fb.group({
-            username: ['', [Validators.required, Validators.minLength(3)]],
-            password: ['', [Validators.required, Validators.minLength(6)]]
+            username: ['', [Validators.required, Validators.minLength(config.minUsernameLength)]],
+            password: ['', [Validators.required, Validators.minLength(config.minPasswordLength)]]
         });
     }
 

@@ -9,7 +9,7 @@ export let Roles = {
     [AUTH_LEVEL.GUEST] : 'Guest',
     [AUTH_LEVEL.USER] : 'User',
     [AUTH_LEVEL.ADMIN] : 'Admin',
-    [AUTH_LEVEL.SUPERUSER] : 'SuperUser'
+    [AUTH_LEVEL.SUPERUSER] : 'Superuser'
 };
 
 export interface User {
