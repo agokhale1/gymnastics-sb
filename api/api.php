@@ -5599,6 +5599,9 @@ $config = new Config([
 
         return false;
     },
+    'authorization.columnHandler' => function($operation, $tableName, $columnName) {
+        return !($tableName === 'users' && $columnName === 'password');
+    },
     'sanitation.handler' => function ($operation, $tableName, $column, $value) {
         if (is_string($value))
         {
