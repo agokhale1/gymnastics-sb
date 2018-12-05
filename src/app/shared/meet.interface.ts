@@ -1,5 +1,5 @@
 export interface Meet {
-    id: number;
+    meet_id: number;
     title: string;
     date: Date;
     location: string;

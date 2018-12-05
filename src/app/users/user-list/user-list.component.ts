@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { User, AUTH_LEVEL, Roles } from 'src/app/shared/user.interface';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { AuthService } from 'src/app/_services/auth.service';
 import { config } from 'src/app/_services/config.interface';
+import { ApiResponse } from 'src/app/shared/api-response.interface';
 
 @Component({
     selector: 'app-user-list',
@@ -16,11 +17,13 @@ export class UserListComponent implements OnInit {
 
     constructor(private http: HttpClient) {
 
-        this.http.get(`${config.apiUrl}/records/users`)
-        .subscribe((userList) => {
+        this.http.get<ApiResponse<User>>(`${config.apiUrl}/records/users`)
+        .subscribe((resp: ApiResponse<User>) => {
 
-            if (userList) {
-                this.users = userList['records'];
+            console.log(resp);
+
+            if (resp) {
+                this.users = resp.records;
             } else {
                 this.users = [];
             }
@@ -28,6 +31,20 @@ export class UserListComponent implements OnInit {
     }
 
     ngOnInit() {
+    }
+
+    delete(id: number) {
+        this.http.delete<HttpResponse<any>>(`${config.apiUrl}/records/users/${id}`, { observe: 'response' })
+        .subscribe((resp: HttpResponse<any>) => {
+            if (!resp.ok) {
+                alert(`Could not delete user.\nHTTP Response: ${resp.status} ${resp.statusText}`);
+            } else {
+                // Remove entry
+                this.users = this.users.filter((user , i, arr) => {
+                    return user.user_id !== id;
+                });
+            }
+        });
     }
 
 }

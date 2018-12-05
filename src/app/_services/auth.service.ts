@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { User, AUTH_LEVEL } from 'src/app/shared/user.interface';
-import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpHeaders, HttpResponse } from '@angular/common/http';
 
 import { map } from 'rxjs/operators';
 import { config } from './config.interface';
@@ -23,7 +23,7 @@ export class AuthService {
         return this.currentUserSubject.value;
     }
 
-    login(username: string, password: string): Observable<boolean> {
+    login(username: string, password: string): Observable<number> {
 
         const body = new HttpParams()
         .set('username', username)
@@ -32,28 +32,30 @@ export class AuthService {
         const headers = new HttpHeaders()
         .set('Content-Type', 'application/x-www-form-urlencoded');
 
-        return this.http.post(`${config.apiUrl}/authenticate`,
+        return this.http.post<HttpResponse<any>>(`${config.apiUrl}/authenticate`,
         body.toString(),
         {
+            observe: 'response',
             headers: headers
-        })
-        .pipe(map((user: User) => {
-            console.log(user);
+        },
+        )
+        .pipe(map((resp: HttpResponse<any>) => {
+            if (resp.ok) {
+                console.log(`API auth returned ${resp.status} ${resp.statusText}`);
 
-            if (user) {
-                console.log('API auth returned true');
+                const user: User = resp.body;
 
                 user.authToken = window.btoa(username + ':' + password);
                 this.currentUserSubject.next(user);
                 localStorage.setItem('currentUser', JSON.stringify(this.currentUserValue));
 
-                return true;
+                return resp.status;
             } else {
-                console.log('API auth returned false');
+                console.log(`API auth returned ${resp.status} ${resp.statusText}`);
 
                 this.currentUserSubject.next(null);
 
-                return false;
+                return resp.status;
             }
         }));
     }

@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { AuthService } from '../_services/auth.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 @Component({
     selector: 'app-login',
@@ -52,53 +53,44 @@ export class LoginComponent implements OnInit {
         }
 
         const obs = this.authService.login(this.form.username.value, this.form.password.value);
-        obs.subscribe((success: boolean) => {
-            if (success) {
-                this.success();
-            } else {
-                alert('Invalid login.');
-            }
-        },
-        (err: HttpErrorResponse) => {
-
-            if (err.status === 401) {
-                alert('Invalid username or password.');
-            } else {
-                alert('Login failed. Could not contact API.');
-            }
-
-            this.authService.logout();
-        });
-
-
+        this.handleStatus(obs);
     }
 
     guestLogin() {
         const obs = this.authService.login('guest', '');
-        obs.subscribe((success: boolean) => {
-            if (success) {
+        this.handleStatus(obs);
+    }
+
+    handleStatus(obs: Observable<number>) {
+        obs.subscribe((status: number) => {
+            if (status === 200) {
                 this.success();
+            } else if (status === 401) {
+                this.failure();
+                alert('Invalid username or password.');
             } else {
-                alert('Invalid login.');
+                this.failure();
+                alert('Login failed. Error contacting the API.');
             }
         },
         (err: HttpErrorResponse) => {
+            this.failure();
 
             if (err.status === 401) {
                 alert('Invalid username or password.');
             } else {
-                alert('Login failed. Could not contact API.');
+                alert('Login failed. Error contacting the API.');
             }
-
-            this.authService.logout();
         });
     }
 
     success() {
-        console.log('Nav to: ' + this.returnUrl);
-        console.log(this.router);
+        console.log('Login nav to: ' + this.returnUrl);
         this.router.navigateByUrl(this.returnUrl);
-        console.log('yo');
+    }
+
+    failure() {
+        this.authService.logout();
     }
 
 }

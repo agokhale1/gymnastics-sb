@@ -5,7 +5,7 @@ export enum GYMNAST_LEVEL {
 }
 
 export interface Gymnast {
-    id: number;
+    gymnast_id: number;
     gym: Gym;
     active: boolean;
     firstName: string;

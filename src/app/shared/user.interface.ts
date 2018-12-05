@@ -13,7 +13,7 @@ export let Roles = {
 };
 
 export interface User {
-    id: number;
+    user_id: number;
     login: string;
     password: string;
     auth_level: AUTH_LEVEL;

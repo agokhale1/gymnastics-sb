@@ -10,11 +10,11 @@
     </thead>
     <tbody>
         <tr *ngFor="let user of users">
-            <td>{{ user.id }}</td>
+            <td>{{ user.user_id }}</td>
             <td>{{ user.login }}</td>
             <td>{{ roles[user.auth_level] }}</td>
-            <td><button [routerLink]="['edit', user.id]" class="btn material-icons">edit</button></td>
-            <td><button class="btn material-icons">delete</button></td>
+            <td><button [routerLink]="['edit', user.user_id]" class="btn material-icons">edit</button></td>
+            <td><button (click)="delete(user.user_id)" class="btn material-icons">delete</button></td>
         </tr>
     </tbody>
 </table>

@@ -14,6 +14,7 @@ if (process.env.NODE_ENV === 'production') {
     console.log('Running with prod environment');
 } else {
     config = {
+        // apiUrl: 'http://localhost:8080/api/api.php'
         apiUrl: 'http://gymscoreboard.tk/api'
     };
 
