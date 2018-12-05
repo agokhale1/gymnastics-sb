@@ -8,6 +8,7 @@
 namespace Tqdev\PhpCrudApi;
 
 require_once './config.php';
+require_once 'db.inc.php';
 
 // file: src/Tqdev/PhpCrudApi/Cache/Cache.php
 
@@ -5613,6 +5614,8 @@ $config = new Config([
             $value = strip_tag($value);
             $value = mysqli_escape_string($link, $value);
         }
+
+        return $value;
     },
     'openApiBase' => '{
         "info": {
