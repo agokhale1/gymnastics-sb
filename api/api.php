@@ -5613,7 +5613,7 @@ $config = new Config([
         return false;
     },
     'authorization.columnHandler' => function($operation, $tableName, $columnName) {
-        return !($tableName === 'users' && $operation === 'list' && $columnName === 'password');
+        return !($tableName === 'users' && ($operation === 'list' || $operation === 'read') && $columnName === 'password');
     },
     'sanitation.handler' => function ($operation, $tableName, $column, $value) {
         global $conn;
