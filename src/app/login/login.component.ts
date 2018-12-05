@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { AuthService } from '../_services/auth.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
     selector: 'app-login',
@@ -58,9 +59,15 @@ export class LoginComponent implements OnInit {
                 alert('Invalid login.');
             }
         },
-        err => {
+        (err: HttpErrorResponse) => {
+
+            if (err.status === 401) {
+                alert('Invalid username or password.');
+            } else {
+                alert('Login failed. Could not contact API.');
+            }
+
             this.authService.logout();
-            alert('Login failed. Could not contact API.');
         });
 
 
@@ -75,9 +82,15 @@ export class LoginComponent implements OnInit {
                 alert('Invalid login.');
             }
         },
-        err => {
+        (err: HttpErrorResponse) => {
+
+            if (err.status === 401) {
+                alert('Invalid username or password.');
+            } else {
+                alert('Login failed. Could not contact API.');
+            }
+
             this.authService.logout();
-            alert('Login failed. Could not contact API.');
         });
     }
 

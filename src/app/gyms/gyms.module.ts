@@ -9,7 +9,7 @@ import { GymDetailComponent } from './gym-detail/gym-detail.component';
 import { GymListComponent } from './gym-list/gym-list.component';
 
 const routes: Route[] = [
-    { path: 'new', component: GymDetailComponent },
+    { path: 'new', component: GymNewComponent },
     { path: 'edit/:id', component: GymEditComponent },
     { path: 'view/:id', component: GymDetailComponent },
     { path: '', component: GymListComponent, pathMatch: 'full' }

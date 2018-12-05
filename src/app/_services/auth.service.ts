@@ -29,8 +29,7 @@ export class AuthService {
         .set('password', password);
 
         const headers = new HttpHeaders()
-        .set('Content-Type', 'application/x-www-form-urlencoded')
-        .set('Authorization', this.currentUserValue.authHeader);
+        .set('Content-Type', 'application/x-www-form-urlencoded');
 
         return this.http.post('http://gymscoreboard.tk/api/authenticate',
         body.toString(),

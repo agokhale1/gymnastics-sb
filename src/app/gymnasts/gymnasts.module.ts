@@ -9,7 +9,7 @@ import { GymnastDetailComponent } from './gymnast-detail/gymnast-detail.componen
 import { GymnastListComponent } from './gymnast-list/gymnast-list.component';
 
 const routes: Route[] = [
-    { path: 'new', component: GymnastDetailComponent },
+    { path: 'new', component: GymnastNewComponent },
     { path: 'edit/:id', component: GymnastEditComponent },
     { path: 'view/:id', component: GymnastDetailComponent },
     { path: '', component: GymnastListComponent, pathMatch: 'full' }

@@ -5,6 +5,13 @@ export enum AUTH_LEVEL {
     SUPERUSER = 4
 }
 
+export let Roles = {
+    [AUTH_LEVEL.GUEST] : 'Guest',
+    [AUTH_LEVEL.USER] : 'User',
+    [AUTH_LEVEL.ADMIN] : 'Admin',
+    [AUTH_LEVEL.SUPERUSER] : 'SuperUser'
+};
+
 export interface User {
     id: number;
     login: string;
