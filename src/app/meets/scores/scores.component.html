@@ -1,25 +1,79 @@
-<button *ngIf="isNotGuest" class="btn btn-dark material-icons" id="addScore">add</button>
+<button *ngIf="isNotGuest" class="btn btn-dark material-icons add-button" data-toggle="modal" data-target="#addScoreModal">add</button>
+
+<div class="modal fade" id="addScoreModal" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add a score</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form [formGroup]="addScoreForm" (ngSubmit)="addScore()">
+                <div class="modal-body">
+
+                    <div class="form-group">
+                        <select formControlName="gymnast_id" class="form-control" [ngClass]="{'is-invalid': submitted && form.gymnast_id.errors}">
+                            <option *ngFor="let gymnast of gymnasts" value="{{ gymnast.gymnast_id }}">{{
+                                gymnast.gymnast_first_name }} {{ gymnast.gymnast_last_name }}</option>
+                        </select>
+                        <div *ngIf="submitted && form.gymnast_id.errors" class="invalid-feedback">
+                            <div *ngIf="form.gym_id.gymnast_id.required">Gym is required</div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <select formControlName="event_id" class="form-control" [ngClass]="{'is-invalid': submitted && form.event_id.errors}">
+                            <option *ngFor="let event of events" value="{{ event.event_id }}">{{ event.event_name }}</option>
+                        </select>
+                        <div *ngIf="submitted && form.event_id.errors" class="invalid-feedback">
+                            <div *ngIf="form.event_id.errors.required">Gym is required</div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <input type="number" formControlName="score" class="form-control" [ngClass]="{'is-invalid': submitted && form.score.errors}"
+                            placeholder="00.000">
+                        <div *ngIf="submitted && form.score.errors" class="invalid-feedback">
+                            <div *ngIf="form.score.errors.required">Gym is required</div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer form-group">
+                    <button type="button" class="btn btn-secondary" (click)="resetModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary" [disabled]="loading">Save Score</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 <table class="table table-hover table-bordered">
     <thead class="thead">
         <tr>
             <th width="2%" class="text-center">ID</th>
-            <th class="text-center">Meet</th>
+            <th class="text-center">Gymnast</th>
+            <th class="text-center">Event</th>
+            <th class="text-center">Score</th>
+            <th class="text-center">Meet Name</th>
             <th class="text-center">Date</th>
             <th class="text-center">Location</th>
             <th width="9%" class="text-center">Action</th>
         </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let meet of meets">
-            <td class="text-center">{{ meet.meet_id }}</td>
-            <td class="text-center">{{ meet.meet_title }}</td>
-            <td class="text-center">{{ meet.meet_date }}</td>
-            <td class="text-center">{{ meet.meet_location }}</td>
+        <tr *ngFor="let score of scores">
+            <td class="text-center">{{ score.score_id }}</td>
+            <td class="text-center">{{ score.gymnast_id.gymnast_last_name }}, {{ score.gymnast_id.gymnast_first_name }}</td>
+            <td class="text-center">{{ score.event_id.event_name }}</td>
+            <td class="text-center">{{ score.score }}</td>
+            <td class="text-center">{{ score.meet_id.meet_title }}</td>
+            <td class="text-center">{{ score.meet_id.meet_date }}</td>
+            <td class="text-center">{{ score.meet_id.meet_location }}</td>
             <td class="text-center">
-                <button class="btn mt-1 mr-2 material-icons">search</button>
-                <button class="btn mt-1 mr-2 material-icons">edit</button>
-                <button class="btn mt-1 mr-2 material-icons">delete</button>
+                <button class="btn mt-1 mr-2 material-icons" (click)="edit(score.score_id)">edit</button>
+                <button class="btn mt-1 mr-2 material-icons" (click)="delete(score.score_id)">delete</button>
             </td>
         </tr>
     </tbody>

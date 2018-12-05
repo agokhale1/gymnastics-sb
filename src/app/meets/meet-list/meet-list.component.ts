@@ -179,4 +179,8 @@ export class MeetListComponent implements OnInit {
         });
     }
 
+    view(id: number) {
+        this.router.navigate([`/meets/view/${id}`]);
+    }
+
 }

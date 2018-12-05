@@ -8,7 +8,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { ScoresComponent } from './scores/scores.component';
 
 const routes: Route[] = [
-    { path: 'view/:id', component: MeetDetailComponent },
+    { path: 'view/:id', component: ScoresComponent },
     { path: '', component: MeetListComponent, pathMatch: 'full' }
 ];
 

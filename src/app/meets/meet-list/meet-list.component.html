@@ -63,7 +63,7 @@
             <td class="text-center">{{ meet.meet_date }}</td>
             <td class="text-center">{{ meet.meet_location }}</td>
             <td class="text-center">
-                <button class="btn mt-1 mr-2 material-icons">search</button>
+                <button class="btn mt-1 mr-2 material-icons" (click)="view(meet.meet_id)">search</button>
                 <button class="btn mt-1 mr-2 material-icons" (click)="edit(meet.meet_id)">edit</button>
                 <button class="btn mt-1 mr-2 material-icons" (click)="delete(meet.meet_id)">delete</button>
         </tr>
