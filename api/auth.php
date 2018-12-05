@@ -37,7 +37,7 @@
     else if ($method === 'POST')
     {
         $request_vars = $_POST;
-        if ($request_vars['_method'] === 'PUT')
+        if (isset($request_vars['_method']) && $request_vars['_method'] === 'PUT')
         {
             $method = 'PUT';
             unset($request_vars['_method']);
@@ -51,9 +51,12 @@
         $_SERVER['PHP_AUTH_PW'] = $request_vars['password'];
     }
 
+    // Uncomment to retrieve hashed passwords for manual entry into the database
+    // echo password_hash($_SERVER['PHP_AUTH_PW'], PASSWORD_DEFAULT);
+
     // Construct user query
     $query = "SELECT * FROM users WHERE login = ";
-    $query .= sqlStringParam($_SERVER['PHP_AUTH_USER']);
+    $query .= sqlStringParam(isset($_SERVER['PHP_AUTH_USER']) ? $_SERVER['PHP_AUTH_USER'] : '');
 
     if ($mode === ApiMode::DebugQueries)
     {

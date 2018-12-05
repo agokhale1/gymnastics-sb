@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { User, AUTH_LEVEL } from 'src/app/shared/user.interface';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
+
+import { map } from 'rxjs/operators';
 
 @Injectable({
     providedIn: 'root'
@@ -11,7 +13,7 @@ export class CurrentUserService {
     private currentUserSubject: BehaviorSubject<User>;
     public currentUser: Observable<User>;
 
-    constructor(http: HttpClient) {
+    constructor(private http: HttpClient) {
         this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('currentUser')));
         this.currentUser = this.currentUserSubject.asObservable();
     }
@@ -20,22 +22,39 @@ export class CurrentUserService {
         return this.currentUserSubject.value;
     }
 
-    login(username: string, password: string): boolean {
+    login(username: string, password: string): Observable<boolean> {
 
-        // TODO: Send HTTP request for this
-        const user: User = {
-            id: 2,
-            login: username,
-            password: password,
-            authLevel: AUTH_LEVEL.GUEST
-        };
+        const body = new HttpParams()
+        .set('username', username)
+        .set('password', password);
 
-        if (user) {
-            localStorage.setItem('currentUser', JSON.stringify(user));
-            this.currentUserSubject.next(user);
-        }
+        const headers = new HttpHeaders()
+        .set('Content-Type', 'application/x-www-form-urlencoded');
 
-        return true;
+        return this.http.post('http://gymscoreboard.tk/api/authenticate',
+        body.toString(),
+        {
+            headers: headers
+        })
+        .pipe(map((user: User) => {
+            console.log(user);
+
+            if (user) {
+                console.log('API auth returned true');
+
+                user.authHeader = 'Authorization: Basic ' + window.btoa(username + ':' + password);
+                this.currentUserSubject.next(user);
+                localStorage.setItem('currentUser', JSON.stringify(this.currentUserValue));
+
+                return true;
+            } else {
+                console.log('API auth returned false');
+
+                this.currentUserSubject.next(null);
+
+                return false;
+            }
+        }));
     }
 
     logout() {

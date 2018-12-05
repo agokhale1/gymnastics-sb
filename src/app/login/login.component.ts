@@ -22,9 +22,9 @@ export class LoginComponent implements OnInit {
     ) {
         // Redirect if already logged in
 
-        console.log(this.authService.currentUserValue);
+        console.log('Login redirect: ' + (this.authService.currentUserValue !== null));
 
-        if (this.authService.currentUserValue) {
+        if (this.authService.currentUserValue !== null) {
             this.router.navigate(['/meets']);
         }
 
@@ -49,22 +49,31 @@ export class LoginComponent implements OnInit {
             return;
         }
 
-        const success: boolean = this.authService.login(this.form.username.value, this.form.password.value);
-        console.log(this.authService.currentUserValue);
+        const obs = this.authService.login(this.form.username.value, this.form.password.value);
+        obs.subscribe((success: boolean) => {
+            if (success) {
+                this.success();
+            } else {
+                alert('Invalid login.');
+            }
+        });
 
-        if (success) {
-            this.success();
-        } else {
-            alert('Invalid login.');
-        }
+
     }
 
     guestLogin() {
-        this.authService.login('guest', '');
-        this.success();
+        const obs = this.authService.login('guest', '');
+        obs.subscribe((success: boolean) => {
+            if (success) {
+                this.success();
+            } else {
+                alert('Invalid login.');
+            }
+        });
     }
 
     success() {
+        console.log('Nav to: ' + this.returnUrl);
         this.router.navigateByUrl(this.returnUrl);
     }
 

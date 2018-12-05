@@ -12,7 +12,10 @@ export class AccessGuard implements CanActivate {
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
         const requiredAuthLevel: AUTH_LEVEL = route.data.requiredAuthLevel || AUTH_LEVEL.GUEST;
 
-        if (this.authService.currentUserValue && this.authService.currentUserValue.authLevel >= requiredAuthLevel) {
+        console.log('Required auth level: ' + requiredAuthLevel);
+        console.log('Current auth level: ' + this.authService.currentUserValue.auth_level);
+
+        if (this.authService.currentUserValue && this.authService.currentUserValue.auth_level >= requiredAuthLevel) {
             return true;
         } else {
             // TODO: Change this to unauthorized page

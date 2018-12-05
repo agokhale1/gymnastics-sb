@@ -24,8 +24,8 @@
             </div>
         </form>
 
-        <button routerLink="/login" routerLinkActive="" class="btn btn-outline-light my-2 my-sm-0">Sign In</button>
-        <button (click)="logout()" class="btn btn-outline-light my-2 my-sm-0">Sign Out</button>
+        <button *ngIf="!loggedIn" routerLink="/login" routerLinkActive="" class="btn btn-outline-light my-2 my-sm-0">Sign In</button>
+        <button *ngIf="loggedIn" (click)="logout()" class="btn btn-outline-light my-2 my-sm-0">Sign Out</button>
 
     </div>
 </nav>

@@ -6,15 +6,15 @@
     {
         $body = json_encode($user, JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
         http_response_code(200);
-        header("Access-Control-Allow-Origin: *");
+        header('Access-Control-Allow-Origin: *');
 
         if ($mode <= \ApiMode::Debug)
         {
-            header("Content-Type: text/html");
+            header('Content-Type: text/html');
         }
         else
         {
-            header("Content-Type: application/json");
+            header('Content-Type: application/json');
             header('Content-Length: ' . strlen($body));
         }
 
