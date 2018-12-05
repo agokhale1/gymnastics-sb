@@ -27,6 +27,7 @@ export class GymnastListComponent implements OnInit {
 
     addGymnastForm: FormGroup;
     submitted = false;
+    isUpdate = false;
 
     constructor(private http: HttpClient, private authService: AuthService, private fb: FormBuilder, private router: Router) {
         this.authService.currentUser.subscribe((user: User) => {
@@ -78,7 +79,7 @@ export class GymnastListComponent implements OnInit {
         $('#addGymnastModal').modal('toggle');
     }
 
-    cancel() {
+    resetModal() {
         this.submitted = false;
 
         $('#addGymnastModal').modal('toggle');
@@ -87,16 +88,21 @@ export class GymnastListComponent implements OnInit {
         });
     }
 
-    create() {
+    addGymnast() {
         this.submitted = true;
 
         if (!this.addGymnastForm.valid) {
             return;
         }
 
+        if (this.isUpdate)
+        {
+            this.update();
+            return;
+        }
+
         const gymnast = this.addGymnastForm.value;
         gymnast.active = true;
-
         console.log(gymnast);
 
         this.http.post<Gymnast>(`${config.apiUrl}/records/gymnasts`,
@@ -107,14 +113,11 @@ export class GymnastListComponent implements OnInit {
             if (!resp.ok) {
                 alert(`Could not update gymnast.\nHTTP Response: ${resp.status} ${resp.statusText}`);
             } else {
-
-                // Add the gymnast and hide the modal
                 gymnast.gymnast_id = resp.body;
                 this.gymnasts.push(gymnast);
-                this.toggleModal();
-
-                // Jump to the new gymnast
+                // Navigate back to the list
                 this.router.navigateByUrl(`/gymnasts#${resp.body}`);
+                this.resetModal();
             }
         },
         err => {
@@ -123,13 +126,57 @@ export class GymnastListComponent implements OnInit {
     }
 
     edit(id: number) {
-        this.toggleModal();
+        this.http.get<Gymnast>(`${config.apiUrl}/records/gymnasts/${id}`)
+        .subscribe((resp: Gymnast) => {
 
-        this.currentGymnast = this.gymnasts.find(function(val, i, arr) {
-            return val.gymnast_id === id;
+            console.log(resp);
+
+            if (resp) {
+                this.currentGymnast = resp;
+                this.addGymnastForm.patchValue(this.currentGymnast);
+                $('#addGymnastModal').modal('toggle');
+            } else {
+                this.currentGymnast = null;
+            }
         });
 
-        this.addGymnastForm.patchValue(this.currentGymnast);
+        this.isUpdate = true;
+    }
+
+    update() {
+        const gymnast_id = this.currentGymnast.gymnast_id;
+        this.currentGymnast = this.addGymnastForm.value;
+        this.currentGymnast.gymnast_id = gymnast_id;
+
+        console.log(this.currentGymnast);
+
+        this.http.put<number>(`${config.apiUrl}/records/gymnasts/${gymnast_id}`,
+            this.currentGymnast,
+            { observe: 'response' }
+        )
+        .subscribe((resp: HttpResponse<any>) => {
+            if (!resp.ok) {
+                alert(`Could not update gymnast.\nHTTP Response: ${resp.status} ${resp.statusText}`);
+            } else {
+                console.log(resp.body);
+
+                for (let i in this.gymnasts) {
+                    if(this.gymnasts[i].gymnast_id === gymnast_id)
+                    {
+                        this.gymnasts[i] = this.currentGymnast;
+                        break;
+                    }
+                }
+
+                // Navigate back to the list
+                this.router.navigateByUrl(`/gymnasts#${gymnast_id}`);
+                this.resetModal();
+            }
+        },
+        err => {
+            alert(`Could not update gymnast. Server responded with ${err.status} ${err.statusText}`);
+        });
+        this.isUpdate = false;
     }
 
     delete(id: number) {
@@ -139,7 +186,7 @@ export class GymnastListComponent implements OnInit {
                 alert(`Could not delete gymnast.\nHTTP Response: ${resp.status} ${resp.statusText}`);
             } else {
                 // Remove entry
-                this.gymnasts = this.gymnasts.filter((gymnast, i, arr) => {
+                this.gymnasts = this.gymnasts.filter((gymnast , i, arr) => {
                     return gymnast.gymnast_id !== id;
                 });
             }

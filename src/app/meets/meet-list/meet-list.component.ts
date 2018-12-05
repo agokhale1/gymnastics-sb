@@ -10,7 +10,6 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import * as $ from 'jquery';
-import { updateBinding } from '@angular/core/src/render3/instructions';
 
 @Component({
     selector: 'app-meet-list',
@@ -86,6 +85,9 @@ export class MeetListComponent implements OnInit {
         }
 
         this.meet = this.addMeetForm.value;
+        if (this.meet.meet_location == null) {
+            this.meet.meet_location = '';
+        }
         console.log(this.meet);
 
         this.http.post<Meet>(`${config.apiUrl}/records/meets`,

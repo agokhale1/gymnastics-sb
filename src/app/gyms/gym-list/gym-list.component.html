@@ -5,7 +5,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Add a gym</h5>
-                <button type="button" class="close" data-dismiss="modal">
+                <button type="button" class="close" (click)="resetModal()">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -31,7 +31,7 @@
                 </div>
                 <div class="modal-footer form-group">
                     <button type="button" class="btn btn-secondary" (click)="resetModal()">Cancel</button>
-                    <button type="submit" class="btn btn-primary" [disabled]="loading">Add Gym</button>
+                    <button type="submit" class="btn btn-primary" [disabled]="loading">Save Gym</button>
                 </div>
             </form>
         </div>
@@ -44,7 +44,6 @@
             <th width="2%" class="text-center">ID</th>
             <th width="7%" class="text-center">Logo</th>
             <th class="text-center">Gym Name</th>
-            <th class="text-center">Number of Members</th>
             <th width="9%" class="text-center">Action</th>
         </tr>
     </thead>
@@ -53,7 +52,6 @@
             <td class="text-center">{{ gym.gym_id }}</td>
             <td><img src="{{ gym.gym_logo_url }}" class="logo" alt="Gym Logo"></td>
             <td class="text-center">{{ gym.gym_name }}</td>
-            <td class="text-center">0</td>
             <td class="text-center">
                 <button class="btn mt-1 mr-2 material-icons" (click)="edit(gym.gym_id)">edit</button>
                 <button class="btn mt-1 mr-2 material-icons" (click)="delete(gym.gym_id)">delete</button>

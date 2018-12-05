@@ -28,6 +28,7 @@ export class GymListComponent implements OnInit {
 
     addGymForm: FormGroup;
     submitted = false;
+    isUpdate = false;
 
     constructor(private http: HttpClient, private authService: AuthService, private fb: FormBuilder, private router: Router) {
         this.authService.currentUser.subscribe((user: User) => {
@@ -54,20 +55,6 @@ export class GymListComponent implements OnInit {
 
     ngOnInit() { }
 
-    delete(id: number) {
-        this.http.delete<HttpResponse<any>>(`${config.apiUrl}/records/gyms/${id}`, { observe: 'response' })
-        .subscribe((resp: HttpResponse<any>) => {
-            if (!resp.ok) {
-                alert(`Could not delete gym.\nHTTP Response: ${resp.status} ${resp.statusText}`);
-            } else {
-                // Remove entry
-                this.gyms = this.gyms.filter((gym , i, arr) => {
-                    return gym.gym_id !== id;
-                });
-            }
-        });
-    }
-
     get form() {
         return this.addGymForm.controls;
     }
@@ -81,22 +68,6 @@ export class GymListComponent implements OnInit {
         });
     }
 
-    edit(id: number) {
-        this.http.get<Gym>(`${config.apiUrl}/records/gyms/${id}`)
-        .subscribe((resp: Gym) => {
-
-            console.log(resp);
-
-            if (resp) {
-                this.gym = resp;
-                this.addGymForm.patchValue(this.gym);
-                $('#addGymModal').modal('toggle');
-            } else {
-                this.gym = null;
-            }
-        });
-    }
-
     addGym() {
         this.submitted = true;
 
@@ -104,7 +75,16 @@ export class GymListComponent implements OnInit {
             return;
         }
 
+        if (this.isUpdate)
+        {
+            this.update();
+            return;
+        }
+
         this.gym = this.addGymForm.value;
+        if (this.gym.gym_logo_url == null) {
+            this.gym.gym_logo_url = '';
+        }
         console.log(this.gym);
 
         this.http.post<Gym>(`${config.apiUrl}/records/gyms`,
@@ -125,6 +105,74 @@ export class GymListComponent implements OnInit {
         },
         err => {
             alert(`Could not update gym. Server responded with ${err.status} ${err.statusText}`);
+        });
+    }
+
+    edit(id: number) {
+        this.http.get<Gym>(`${config.apiUrl}/records/gyms/${id}`)
+        .subscribe((resp: Gym) => {
+
+            console.log(resp);
+
+            if (resp) {
+                this.gym = resp;
+                this.addGymForm.patchValue(this.gym);
+                $('#addGymModal').modal('toggle');
+            } else {
+                this.gym = null;
+            }
+        });
+
+        this.isUpdate = true;
+    }
+
+    update() {
+        const gym_id = this.gym.gym_id;
+        this.gym = this.addGymForm.value;
+        this.gym.gym_id = gym_id;
+
+        console.log(this.gym);
+
+        this.http.put<number>(`${config.apiUrl}/records/gyms/${gym_id}`,
+            this.gym,
+            { observe: 'response' }
+        )
+        .subscribe((resp: HttpResponse<any>) => {
+            if (!resp.ok) {
+                alert(`Could not update meet.\nHTTP Response: ${resp.status} ${resp.statusText}`);
+            } else {
+                console.log(resp.body);
+
+                for (let i in this.gyms) {
+                    if(this.gyms[i].gym_id === gym_id)
+                    {
+                        this.gyms[i] = this.gym;
+                        break;
+                    }
+                }
+
+                // Navigate back to the list
+                this.router.navigateByUrl(`/gyms#${gym_id}`);
+                this.resetModal();
+            }
+        },
+        err => {
+            alert(`Could not update gym. Server responded with ${err.status} ${err.statusText}`);
+        });
+        this.isUpdate = false;
+    }
+
+    delete(id: number) {
+        this.http.delete<HttpResponse<any>>(`${config.apiUrl}/records/gyms/${id}`, { observe: 'response' })
+        .subscribe((resp: HttpResponse<any>) => {
+            if (!resp.ok) {
+                alert(`Could not delete gym.\nHTTP Response: ${resp.status} ${resp.statusText}`);
+            } else {
+                // Remove entry
+                this.gyms = this.gyms.filter((gym , i, arr) => {
+                    return gym.gym_id !== id;
+                });
+            }
         });
     }
 

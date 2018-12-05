@@ -1,15 +1,15 @@
-<button *ngIf="isNotGuest" class="btn btn-dark material-icons add-button" id="addGymnast" (click)="toggleModal()">add</button>
+<button *ngIf="isNotGuest" class="btn btn-dark material-icons add-button" id="addGymnast" data-toggle="modal" data-target="#addGymnastModal">add</button>
 
 <div class="modal fade" id="addGymnastModal" role="dialog">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Add a gymnast</h5>
-                <button type="button" class="close" data-dismiss="modal">
+                <button type="button" class="close" (click)="resetModal()">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form [formGroup]="addGymnastForm" (ngSubmit)="create()">
+            <form [formGroup]="addGymnastForm" (ngSubmit)="addGymnast()">
                 <div class="modal-body">
                     <div class="form-group">
                         <label>First Name</label>
@@ -51,7 +51,7 @@
                 </div>
                 <div class="modal-footer form-group">
                     <button type="button" class="btn btn-secondary" (click)="cancel()">Cancel</button>
-                    <button type="submit" class="btn btn-primary" [disabled]="loading">Add Gymnast</button>
+                    <button type="submit" class="btn btn-primary" [disabled]="loading">Save Gymnast</button>
                 </div>
             </form>
         </div>
