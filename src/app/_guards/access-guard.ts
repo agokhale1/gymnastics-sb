@@ -2,12 +2,12 @@ import { Injectable } from '@angular/core';
 import { CanActivate, UrlTree, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { User, AUTH_LEVEL } from '../shared/user.interface';
-import { CurrentUserService } from '../_services/current-user.service';
+import { AuthService } from '../_services/auth.service';
 
 
 @Injectable()
 export class AccessGuard implements CanActivate {
-    constructor(private router: Router, private authService: CurrentUserService) { }
+    constructor(private router: Router, private authService: AuthService) { }
 
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
         const requiredAuthLevel: AUTH_LEVEL = route.data.requiredAuthLevel || AUTH_LEVEL.GUEST;

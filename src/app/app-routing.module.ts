@@ -4,7 +4,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { LoginComponent } from './login/login.component';
 import { AUTH_LEVEL } from './shared/user.interface';
 import { AccessGuard } from './_guards/access-guard';
-import { CurrentUserService } from './_services/current-user.service';
+import { AuthService } from './_services/auth.service';
 
 const routes: Routes = [
     {
@@ -39,6 +39,6 @@ const routes: Routes = [
 @NgModule({
     imports: [RouterModule.forRoot(routes)],
     exports: [RouterModule],
-    providers: [AccessGuard, CurrentUserService]
+    providers: [AccessGuard, AuthService]
 })
 export class AppRoutingModule { }

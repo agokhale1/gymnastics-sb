@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { CurrentUserService } from '../_services/current-user.service';
+import { AuthService } from '../_services/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { User } from '../shared/user.interface';
+import { User, AUTH_LEVEL } from '../shared/user.interface';
 
 @Component({
     selector: 'app-navbar',
@@ -11,10 +11,13 @@ import { User } from '../shared/user.interface';
 export class NavbarComponent implements OnInit {
 
     public loggedIn = false;
+    public isAdmin = false;
 
-    constructor(private route: ActivatedRoute, private router: Router, private authService: CurrentUserService) {
+    constructor(private route: ActivatedRoute, private router: Router, private authService: AuthService) {
         this.authService.currentUser.subscribe((user: User) => {
             this.loggedIn = user !== null;
+            this.isAdmin = ((user) ? user.auth_level >= AUTH_LEVEL.ADMIN : false);
+
             console.log('Updated logged in status: ' + this.loggedIn);
         });
     }

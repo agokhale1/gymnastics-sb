@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
-import { CurrentUserService } from '../_services/current-user.service';
+import { AuthService } from '../_services/auth.service';
 
 @Component({
     selector: 'app-login',
@@ -17,7 +17,7 @@ export class LoginComponent implements OnInit {
     constructor(
         private route: ActivatedRoute,
         private router: Router,
-        private authService: CurrentUserService,
+        private authService: AuthService,
         private fb: FormBuilder
     ) {
         this.route.queryParams.subscribe(params => this.returnUrl = params['return'] || '/meets');
@@ -57,6 +57,10 @@ export class LoginComponent implements OnInit {
             } else {
                 alert('Invalid login.');
             }
+        },
+        err => {
+            this.authService.logout();
+            alert('Login failed. Could not contact API.');
         });
 
 
@@ -70,6 +74,10 @@ export class LoginComponent implements OnInit {
             } else {
                 alert('Invalid login.');
             }
+        },
+        err => {
+            this.authService.logout();
+            alert('Login failed. Could not contact API.');
         });
     }
 
