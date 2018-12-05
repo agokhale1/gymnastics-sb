@@ -6,7 +6,10 @@
     {
         $body = json_encode($user, JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
         http_response_code(200);
-        header('Access-Control-Allow-Origin: *');
+        if ($mode <= ApiMode::Dev)
+        {
+            header('Access-Control-Allow-Origin: *');
+        }
 
         if ($mode <= \ApiMode::Debug)
         {

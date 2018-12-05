@@ -102,6 +102,10 @@
         // Only require auth if this a mutable request
         if ($method !== 'GET' && $method !== 'OPTIONS')
         {
+            if ($mode <= ApiMode::Dev)
+            {
+                header('Access-Control-Allow-Origin: *');
+            }
             requiresAuth();
         }
     }
