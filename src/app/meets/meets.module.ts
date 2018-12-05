@@ -4,7 +4,6 @@ import { Route, RouterModule, Router } from '@angular/router';
 
 import { MeetNewComponent } from './meet-new/meet-new.component';
 import { MeetEditComponent } from './meet-edit/meet-edit.component';
-import { MeetItemComponent } from './meet-item/meet-item.component';
 import { MeetDetailComponent } from './meet-detail/meet-detail.component';
 import { MeetListComponent } from './meet-list/meet-list.component';
 
@@ -19,7 +18,6 @@ const routes: Route[] = [
     declarations: [
         MeetNewComponent,
         MeetEditComponent,
-        MeetItemComponent,
         MeetDetailComponent,
         MeetListComponent,
     ],

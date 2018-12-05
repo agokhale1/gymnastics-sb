@@ -29,6 +29,12 @@ const routes: Routes = [
         data: { requiredAuthLevel: AUTH_LEVEL.GUEST }
     },
     {
+        path: 'gymnasts',
+        loadChildren: './gymnasts/gymnasts.module#GymnastsModule',
+        canActivate: [AccessGuard],
+        data: { requiredAuthLevel: AUTH_LEVEL.GUEST }
+    },
+    {
         path: 'users',
         loadChildren: './users/users.module#UsersModule',
         canActivate: [AccessGuard],

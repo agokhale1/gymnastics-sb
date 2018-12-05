@@ -1,3 +1,24 @@
-<p>
-  gym-list works!
-</p>
+<button class="btn btn-dark material-icons" id="addGym">add</button>
+
+<table class="table table-hover table-bordered">
+    <thead class="thead">
+        <tr>
+            <th width="2%" class="text-center">ID</th>
+            <th class="text-center">Gym Name</th>
+            <th class="text-center">Number of Members</th>
+            <th width="9%" class="text-center">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let gym of gyms">
+            <td class="text-center">{{ gym.id }}</td>
+            <td class="text-center">{{ gym.name }}</td>
+            <td class="text-center">0</td>
+            <td class="text-center">
+                <button [routerLink]="['view', gym.id]" class="btn mr-2 material-icons">search</button>
+                <button [routerLink]="['edit', gym.id]" class="btn mr-2 material-icons">edit</button>
+                <button class="btn material-icons">delete</button>
+            </td>
+        </tr>
+    </tbody>
+</table>

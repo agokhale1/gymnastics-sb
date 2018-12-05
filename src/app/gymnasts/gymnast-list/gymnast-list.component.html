@@ -1,3 +1,28 @@
-<p>
-  gymnast-list works!
-</p>
+<button class="btn btn-dark material-icons" id="addGymnast">add</button>
+
+<table class="table table-hover table-bordered">
+    <thead class="thead">
+        <tr>
+            <th width="2%" class="text-center">ID</th>
+            <th class="text-center">First Name</th>
+            <th class="text-center">Last Name</th>
+            <th class="text-center">Gym</th>
+            <th class="text-center">Level</th>
+            <th width="9%" class="text-center">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let gymnast of gymnasts">
+            <td class="text-center">{{ gymnast.id }}</td>
+            <td class="text-center">{{ gymnast.firstName }}</td>
+            <td class="text-center">{{ gymnast.lastName }}</td>
+            <td class="text-center">{{ gymnast.gym.name }}</td>
+            <td class="text-center">{{ gymnast.level }}</td>
+            <td class="text-center">
+                <button [routerLink]="['view', gymnast.id]" class="btn mr-2 material-icons">search</button>
+                <button [routerLink]="['edit', gymnast.id]" class="btn mr-2 material-icons">edit</button>
+                <button class="btn material-icons">delete</button>
+            </td>
+        </tr>
+    </tbody>
+</table>
