@@ -13,7 +13,7 @@ export class AccessGuard implements CanActivate {
         const requiredAuthLevel: AUTH_LEVEL = route.data.requiredAuthLevel || AUTH_LEVEL.GUEST;
 
         console.log('Required auth level: ' + requiredAuthLevel);
-        console.log('Current auth level: ' + this.authService.currentUserValue.auth_level);
+        console.log('Current auth level: ' + ((this.authService.currentUserValue) ? this.authService.currentUserValue.auth_level : ''));
 
         if (this.authService.currentUserValue && this.authService.currentUserValue.auth_level >= requiredAuthLevel) {
             return true;

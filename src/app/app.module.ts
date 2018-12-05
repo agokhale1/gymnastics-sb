@@ -6,10 +6,6 @@ import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
-import { GymnastsModule } from './gymnasts/gymnasts.module';
-import { GymsModule } from './gyms/gyms.module';
-import { MeetsModule } from './meets/meets.module';
-import { UsersModule } from './users/users.module';
 import { NavbarComponent } from './navbar/navbar.component';
 import { LoginComponent } from './login/login.component';
 
@@ -24,11 +20,7 @@ import { LoginComponent } from './login/login.component';
         HttpClientModule,
         AppRoutingModule,
         FormsModule,
-        ReactiveFormsModule,
-        GymnastsModule,
-        GymsModule,
-        MeetsModule,
-        UsersModule
+        ReactiveFormsModule
     ],
     providers: [],
     bootstrap: [AppComponent]

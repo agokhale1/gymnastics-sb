@@ -1,8 +1,9 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+
 import { LoginComponent } from './login/login.component';
-import { AccessGuard } from './_guards/access-guard';
 import { AUTH_LEVEL } from './shared/user.interface';
+import { AccessGuard } from './_guards/access-guard';
 import { CurrentUserService } from './_services/current-user.service';
 
 const routes: Routes = [
@@ -17,7 +18,7 @@ const routes: Routes = [
     },
     {
         path: 'meets',
-        loadChildren: './gymnasts/gymnasts.module#GymnastsModule',
+        loadChildren: './meets/meets.module#MeetsModule',
         canActivate: [AccessGuard],
         data: { requiredAuthLevel: AUTH_LEVEL.GUEST }
     },

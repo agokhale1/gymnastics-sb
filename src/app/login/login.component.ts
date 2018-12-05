@@ -10,7 +10,7 @@ import { CurrentUserService } from '../_services/current-user.service';
 })
 export class LoginComponent implements OnInit {
 
-    private returnUrl = '';
+    private returnUrl = '/meets';
     loginForm: FormGroup;
     submitted = false;
 
@@ -20,12 +20,14 @@ export class LoginComponent implements OnInit {
         private authService: CurrentUserService,
         private fb: FormBuilder
     ) {
-        // Redirect if already logged in
+        this.route.queryParams.subscribe(params => this.returnUrl = params['return'] || '/meets');
+
 
         console.log('Login redirect: ' + (this.authService.currentUserValue !== null));
 
+        // Redirect if already logged in
         if (this.authService.currentUserValue !== null) {
-            this.router.navigate(['/meets']);
+            this.success();
         }
 
         this.loginForm = this.fb.group({
@@ -35,7 +37,6 @@ export class LoginComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.route.queryParams.subscribe(params => this.returnUrl = params['return'] || '/meets');
     }
 
     get form() {
@@ -74,7 +75,9 @@ export class LoginComponent implements OnInit {
 
     success() {
         console.log('Nav to: ' + this.returnUrl);
+        console.log(this.router);
         this.router.navigateByUrl(this.returnUrl);
+        console.log('yo');
     }
 
 }
