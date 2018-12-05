@@ -52,7 +52,7 @@ export class ScoresComponent implements OnInit {
             score: ['', [Validators.required, Validators.min(0), Validators.max(10)]]
         });
 
-        this.http.get<ApiResponse<Score>>(`${config.apiUrl}/records/scores?join=gymnasts&join=meets&join=events`)
+        this.http.get<ApiResponse<Score>>(`${config.apiUrl}/records/scores?join=gymnasts&join=meets&join=events&filter=meet_id,eq,${this.meetId}`)
         .subscribe((resp: ApiResponse<Score>) => {
 
             console.log(resp);
