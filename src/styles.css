@@ -15,3 +15,7 @@ html, body {
     right: 2%;
     bottom: 2%;
 }
+
+.logo {
+    max-width: 100%;
+}

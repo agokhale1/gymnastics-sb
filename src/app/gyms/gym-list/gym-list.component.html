@@ -42,6 +42,7 @@
     <thead class="thead">
         <tr>
             <th width="2%" class="text-center">ID</th>
+            <th width="7%" class="text-center">Logo</th>
             <th class="text-center">Gym Name</th>
             <th class="text-center">Number of Members</th>
             <th width="9%" class="text-center">Action</th>
@@ -50,6 +51,7 @@
     <tbody>
         <tr *ngFor="let gym of gyms">
             <td class="text-center">{{ gym.gym_id }}</td>
+            <td><img src="{{ gym.gym_logo_url }}" class="logo" alt="Gym Logo"></td>
             <td class="text-center">{{ gym.gym_name }}</td>
             <td class="text-center">0</td>
             <td class="text-center">

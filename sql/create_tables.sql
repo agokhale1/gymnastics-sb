@@ -18,7 +18,7 @@ CREATE TABLE users (
 CREATE TABLE gyms (
     gym_id INT NOT NULL AUTO_INCREMENT,
     gym_name VARCHAR(100) NOT NULL UNIQUE,
-    gym_logo_url VARCHAR(255) NOT NULL DEFAULT '/images/no-logo.png',
+    gym_logo_url VARCHAR(255) NOT NULL DEFAULT '/assets/images/no-logo.png',
     PRIMARY KEY (gym_id)
 );
 
@@ -37,7 +37,7 @@ CREATE TABLE gymnasts (
     gymnast_first_name VARCHAR(25) NOT NULL,
     gymnast_last_name VARCHAR(35) NOT NULL,
     gymnast_level VARCHAR(15) NOT NULL,
-    gymnast_img_url VARCHAR(255) NOT NULL DEFAULT '/images/no-profile.png',
+    gymnast_img_url VARCHAR(255) NOT NULL DEFAULT '/assets/images/no-profile.png',
     PRIMARY KEY (gymnast_id),
     FOREIGN KEY (gym_id) REFERENCES gyms(gym_id)
 );
