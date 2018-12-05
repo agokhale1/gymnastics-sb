@@ -26,7 +26,7 @@ export class MeetListComponent implements OnInit {
     };
 
     meets: Meet[] = [];
-    private isNotGuest = false;
+    isNotGuest = false;
 
     addMeetForm: FormGroup;
     submitted = false;

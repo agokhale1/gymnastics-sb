@@ -21,7 +21,7 @@ import { Event } from 'src/app/shared/event.interface';
 })
 export class ScoresComponent implements OnInit {
 
-    score: Score = {
+    score = {
         score_id: 0,
         meet_id: null,
         gymnast_id: null,
@@ -33,7 +33,7 @@ export class ScoresComponent implements OnInit {
     scores: Score[] = [];
     gymnasts: Gymnast[] = [];
     events: Event[] = [];
-    private isNotGuest = false;
+    isNotGuest = false;
 
     addScoreForm: FormGroup;
     submitted = false;
@@ -163,7 +163,7 @@ export class ScoresComponent implements OnInit {
         const score_id = this.score.score_id;
         this.score = this.addScoreForm.value;
         this.score.score_id = score_id;
-        this.score.meet_id = this.meetId
+        this.score.meet_id = this.meetId;
 
         console.log(this.score);
 

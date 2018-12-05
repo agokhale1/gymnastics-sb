@@ -24,7 +24,7 @@ export class GymListComponent implements OnInit {
     };
 
     gyms: Gym[] = [];
-    private isNotGuest = false;
+    isNotGuest = false;
 
     addGymForm: FormGroup;
     submitted = false;

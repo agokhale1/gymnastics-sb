@@ -23,7 +23,7 @@ export class GymnastListComponent implements OnInit {
     gyms: Gym[] = [];
     currentGymnast: Gymnast = null;
 
-    private isNotGuest = false;
+    isNotGuest = false;
 
     addGymnastForm: FormGroup;
     submitted = false;
