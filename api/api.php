@@ -3125,7 +3125,7 @@ class CorsMiddleware extends Middleware
             $response = $this->responder->error(ErrorCode::ORIGIN_FORBIDDEN, $origin);
         } elseif ($method == 'OPTIONS') {
             $response = new Response(Response::OK, '');
-            $allowHeaders = $this->getProperty('allowHeaders', 'Content-Type, X-XSRF-TOKEN, X-Authorization');
+            $allowHeaders = $this->getProperty('allowHeaders', 'Content-Type, X-XSRF-TOKEN, X-Authorization, Authorization');
             if ($allowHeaders) {
                 $response->addHeader('Access-Control-Allow-Headers', $allowHeaders);
             }
@@ -5590,7 +5590,12 @@ $config = new Config([
         {
             if (!(in_array($operation, \AuthLevels::GuestAbilities) && !in_array($tableName, \AuthLevels::GuestRestrictedTables)))
             {
-                requiresAuth();
+                // Unknown option is required to allow pre-flight OPTIONS request through
+                if ($operation !== 'unknown')
+                {
+                    requiresAuth();
+                }
+
                 return false;
             }
 

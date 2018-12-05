@@ -23,8 +23,13 @@
         http_response_code(401);
         header('WWW-Authenticate: Basic realm="Gymnastics-Scoreboard-API"');
         header('HTTP/1.0 401 Unauthorized');
-        echo 'Please authenticate to perform the requested operation.<br>';
-        echo '<a href="/login">Login page</a>';
+
+        $body = array(
+            'message' => 'Please authenticate via Basic auth or visit /api/authenticate to perform the requested operation.',
+        );
+
+        header('Content-Type: application/json');
+        echo json_encode($body, JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
         exit;
     }
 
