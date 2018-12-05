@@ -59,20 +59,6 @@ export class MeetListComponent implements OnInit {
 
     ngOnInit() { }
 
-    delete(id: number) {
-        this.http.delete<HttpResponse<any>>(`${config.apiUrl}/records/meets/${id}`, { observe: 'response' })
-        .subscribe((resp: HttpResponse<any>) => {
-            if (!resp.ok) {
-                alert(`Could not delete meet.\nHTTP Response: ${resp.status} ${resp.statusText}`);
-            } else {
-                // Remove entry
-                this.meets = this.meets.filter((meet , i, arr) => {
-                    return meet.meet_id !== id;
-                });
-            }
-        });
-    }
-
     get form() {
         return this.addMeetForm.controls;
     }
@@ -83,6 +69,43 @@ export class MeetListComponent implements OnInit {
         $('#addMeetModal').modal('toggle');
         $('#addMeetModal').on('hidden.bs.modal', function () {
             $(this).find('form').trigger('reset');
+        });
+    }
+
+    addMeet() {
+        this.submitted = true;
+
+        if (!this.addMeetForm.valid) {
+            return;
+        }
+
+        if (this.isUpdate)
+        {
+            this.update();
+            return;
+        }
+
+        this.meet = this.addMeetForm.value;
+        console.log(this.meet);
+
+        this.http.post<Meet>(`${config.apiUrl}/records/meets`,
+            this.meet,
+            { observe: 'response' }
+        )
+        .subscribe((resp: HttpResponse<any>) => {
+            if (!resp.ok) {
+                alert(`Could not update meet.\nHTTP Response: ${resp.status} ${resp.statusText}`);
+            } else {
+                console.log(resp.body);
+                this.meet.meet_id = resp.body;
+                this.meets.push(this.meet);
+                // Navigate back to the list
+                this.router.navigateByUrl(`/meets#${this.meet.meet_id}`);
+                this.resetModal();
+            }
+        },
+        err => {
+            alert(`Could not update meet. Server responded with ${err.status} ${err.statusText}`);
         });
     }
 
@@ -100,6 +123,7 @@ export class MeetListComponent implements OnInit {
                 this.meet = null;
             }
         });
+
         this.isUpdate = true;
     }
 
@@ -107,6 +131,7 @@ export class MeetListComponent implements OnInit {
         const meet_id = this.meet.meet_id;
         this.meet = this.addMeetForm.value;
         this.meet.meet_id = meet_id;
+
         console.log(this.meet);
 
         this.http.put<number>(`${config.apiUrl}/records/meets/${meet_id}`,
@@ -138,40 +163,17 @@ export class MeetListComponent implements OnInit {
         this.isUpdate = false;
     }
 
-    addMeet() {
-        this.submitted = true;
-
-        if (!this.addMeetForm.valid) {
-            return;
-        }
-
-        if(this.isUpdate)
-        {
-            this.update();
-            return;
-        }
-
-        this.meet = this.addMeetForm.value;
-        console.log(this.meet);
-
-        this.http.post<Meet>(`${config.apiUrl}/records/meets`,
-            this.meet,
-            { observe: 'response' }
-        )
+    delete(id: number) {
+        this.http.delete<HttpResponse<any>>(`${config.apiUrl}/records/meets/${id}`, { observe: 'response' })
         .subscribe((resp: HttpResponse<any>) => {
             if (!resp.ok) {
-                alert(`Could not update meet.\nHTTP Response: ${resp.status} ${resp.statusText}`);
+                alert(`Could not delete meet.\nHTTP Response: ${resp.status} ${resp.statusText}`);
             } else {
-                console.log(resp.body);
-                this.meet.meet_id = resp.body;
-                this.meets.push(this.meet);
-                // Navigate back to the list
-                this.router.navigateByUrl(`/meets#${this.meet.meet_id}`);
-                this.resetModal();
+                // Remove entry
+                this.meets = this.meets.filter((meet , i, arr) => {
+                    return meet.meet_id !== id;
+                });
             }
-        },
-        err => {
-            alert(`Could not update meet. Server responded with ${err.status} ${err.statusText}`);
         });
     }
 
