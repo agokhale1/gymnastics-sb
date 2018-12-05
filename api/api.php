@@ -5097,7 +5097,7 @@ class Api
         } catch (\Throwable $e) {
             if ($e instanceof \PDOException) {
 
-                /* echo json_encode(array(
+               /*  echo json_encode(array(
                     'message' => $e->getMessage(),
                     'line' => $e->getLine()
                 ));
@@ -5622,6 +5622,11 @@ $config = new Config([
         {
             $value = strip_tags($value);
             $value = mysqli_escape_string($conn, $value);
+        }
+
+        // Hash passwords
+        if ($tableName === 'users' && $column['name'] === 'password') {
+            $value = password_hash($value, PASSWORD_DEFAULT);
         }
 
         return $value;
