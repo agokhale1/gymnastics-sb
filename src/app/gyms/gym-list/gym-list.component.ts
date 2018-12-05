@@ -139,7 +139,7 @@ export class GymListComponent implements OnInit {
         )
         .subscribe((resp: HttpResponse<any>) => {
             if (!resp.ok) {
-                alert(`Could not update meet.\nHTTP Response: ${resp.status} ${resp.statusText}`);
+                alert(`Could not update gym.\nHTTP Response: ${resp.status} ${resp.statusText}`);
             } else {
                 console.log(resp.body);
 

@@ -1,22 +1,68 @@
-<button [routerLink]="['new']" class="btn btn-dark material-icons add-button" id="addUser">add</button>
+<button class="btn btn-dark material-icons add-button" data-toggle="modal" data-target="#addUserModal">add</button>
 
-<table class="table table-hover">
+<div class="modal fade" id="addUserModal" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add a user</h5>
+                <button type="button" class="close" (click)="resetModal()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form [formGroup]="addUserForm" (ngSubmit)="addUser()">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Login</label>
+                        <input type="text" formControlName="login" class="form-control" [ngClass]="{'is-invalid': submitted && form.login.errors}"
+                            placeholder="Username" autofocus>
+                        <div *ngIf="submitted && form.login.errors" class="invalid-feedback">
+                            <div *ngIf="form.login.errors.required">Login is required</div>
+                            <div *ngIf="form.login.errors.maxlength">Login must not be over 25 characters</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" formControlName="password" class="form-control" [ngClass]="{'is-invalid': submitted && form.password.errors}"
+                            placeholder="Password">
+                        <div *ngIf="submitted && form.login.errors" class="invalid-feedback">
+                            <div *ngIf="form.password.errors.required">Password is required</div>
+                            <div *ngIf="form.password.errors.maxlength">Password must not be over 255 characters</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Authentication Level</label>
+                        <select formControlName="auth_level" class="form-control mt-1 mb-2" [ngClass]="{'is-invalid': submitted && form.auth_level.errors}">
+                            <option *ngFor="let level of levels()" value="{{ level }}" [selected]="user && user.auth_level == level">{{
+                                roles[level] }}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer form-group">
+                    <button type="button" class="btn btn-secondary" (click)="resetModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary" [disabled]="loading">Save User</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<table class="table table-hover table-bordered">
     <thead class="thead">
         <tr>
-            <th>ID</th>
-            <th>Username</th>
-            <th>Role</th>
+            <th width="2%" class="text-center">ID</th>
+            <th class="text-center">Username</th>
+            <th class="text-center">Role</th>
             <th width="9%" class="text-center">Actions</th>
         </tr>
     </thead>
     <tbody>
         <tr id="{{ user.user_id }}" *ngFor="let user of users">
-            <td>{{ user.user_id }}</td>
-            <td>{{ user.login }}</td>
-            <td>{{ roles[user.auth_level] }}</td>
+            <td class="text-center">{{ user.user_id }}</td>
+            <td class="text-center">{{ user.login }}</td>
+            <td class="text-center">{{ roles[user.auth_level] }}</td>
             <td class="text-center">
-                <button [routerLink]="['edit', user.user_id]" class="btn mr-2 material-icons">edit</button>
-                <button (click)="delete(user.user_id)" class="btn material-icons">delete</button>
+                <button class="btn mr-2 material-icons" (click)="edit(user.user_id)">edit</button>
+                <button class="btn material-icons" (click)="delete(user.user_id)">delete</button>
             </td>
         </tr>
     </tbody>
