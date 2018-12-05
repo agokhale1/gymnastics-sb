@@ -10,7 +10,7 @@ CREATE TABLE users (
     user_id INT NOT NULL AUTO_INCREMENT,
     login VARCHAR(25) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
-    auth_level INT NOT NULL DEFAULT 0,
+    auth_level INT NOT NULL DEFAULT 1,
     PRIMARY KEY (user_id),
     FOREIGN KEY (auth_level) REFERENCES auth_levels(auth_level)
 );
@@ -37,6 +37,7 @@ CREATE TABLE gymnasts (
     gymnast_first_name VARCHAR(25) NOT NULL,
     gymnast_last_name VARCHAR(35) NOT NULL,
     gymnast_level VARCHAR(15) NOT NULL,
+    gymnast_img_url VARCHAR(255) NOT NULL DEFAULT '/images/no-profile.png',
     PRIMARY KEY (gymnast_id),
     FOREIGN KEY (gym_id) REFERENCES gyms(gym_id)
 );

@@ -5096,17 +5096,24 @@ class Api
             $response = $this->router->route($request);
         } catch (\Throwable $e) {
             if ($e instanceof \PDOException) {
+
+                /* echo json_encode(array(
+                    'message' => $e->getMessage(),
+                    'line' => $e->getLine()
+                ));
+                exit; */
+
                 if (strpos(strtolower($e->getMessage()), 'duplicate') !== false) {
-                    return $this->responder->error(ErrorCode::DUPLICATE_KEY_EXCEPTION, '');
+                    return $this->responder->error(ErrorCode::DUPLICATE_KEY_EXCEPTION, $e->getMessage());
                 }
                 if (strpos(strtolower($e->getMessage()), 'default value') !== false) {
-                    return $this->responder->error(ErrorCode::DATA_INTEGRITY_VIOLATION, '');
+                    return $this->responder->error(ErrorCode::DATA_INTEGRITY_VIOLATION, $e->getMessage());
                 }
                 if (strpos(strtolower($e->getMessage()), 'allow nulls') !== false) {
-                    return $this->responder->error(ErrorCode::DATA_INTEGRITY_VIOLATION, '');
+                    return $this->responder->error(ErrorCode::DATA_INTEGRITY_VIOLATION, $e->getMessage());
                 }
                 if (strpos(strtolower($e->getMessage()), 'constraint') !== false) {
-                    return $this->responder->error(ErrorCode::DATA_INTEGRITY_VIOLATION, '');
+                    return $this->responder->error(ErrorCode::DATA_INTEGRITY_VIOLATION, $e->getMessage());
                 }
             }
             $response = $this->responder->error(ErrorCode::ERROR_NOT_FOUND, $e->getMessage());
@@ -5606,13 +5613,15 @@ $config = new Config([
         return false;
     },
     'authorization.columnHandler' => function($operation, $tableName, $columnName) {
-        return !($tableName === 'users' && $columnName === 'password');
+        return !($tableName === 'users' && $operation === 'list' && $columnName === 'password');
     },
     'sanitation.handler' => function ($operation, $tableName, $column, $value) {
+        global $conn;
+
         if (is_string($value))
         {
-            $value = strip_tag($value);
-            $value = mysqli_escape_string($link, $value);
+            $value = strip_tags($value);
+            $value = mysqli_escape_string($conn, $value);
         }
 
         return $value;
