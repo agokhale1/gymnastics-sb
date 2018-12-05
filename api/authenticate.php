@@ -15,7 +15,7 @@
         else
         {
             header("Content-Type: application/json");
-            header('Content-Length: ' + strlen($body));
+            header('Content-Length: ' . strlen($body));
         }
 
         echo $body;
@@ -25,4 +25,5 @@
         // Respond with 401
         requiresAuth();
     }
+
 ?>
