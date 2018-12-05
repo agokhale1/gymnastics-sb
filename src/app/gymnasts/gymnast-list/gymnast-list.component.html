@@ -1,4 +1,61 @@
-<button class="btn btn-dark material-icons add-button" id="addGymnast">add</button>
+<button *ngIf="isNotGuest" class="btn btn-dark material-icons" id="addGymnast" data-toggle="modal" data-target="#addGymnastModal">add</button>
+
+<div class="modal fade" id="addGymnastModal" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add a gymnast</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form [formGroup]="addGymnastForm" (ngSubmit)="addGymnast()">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>First Name</label>
+                        <input type="text" formControlName="firstName" class="form-control" [ngClass]="{'is-invalid': submitted && form.firstName.errors}"
+                            placeholder="John" autofocus>
+                        <div *ngIf="submitted && form.firstName.errors" class="invalid-feedback">
+                            <div *ngIf="form.firstName.errors.required">First name is required</div>
+                            <div *ngIf="form.firstName.errors.maxlength">Level must be over 25 characters</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Last Name</label>
+                        <input type="text" formControlName="lastName" class="form-control" [ngClass]="{'is-invalid': submitted && form.lastName.errors}"
+                            placeholder="Doe">
+                        <div *ngIf="submitted && form.lastName.errors" class="invalid-feedback">
+                            <div *ngIf="form.lastName.errors.required">Last name is required</div>
+                            <div *ngIf="form.lastName.errors.maxlength">Level must be over 35 characters</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Gym</label>
+                        <input type="text" formControlName="gym" class="form-control" [ngClass]="{'is-invalid': submitted && form.gym.errors}"
+                            placeholder="Brestyan's">
+                        <div *ngIf="submitted && form.gym.errors" class="invalid-feedback">
+                            <div *ngIf="form.gym.errors.required">Gym is required</div>
+                            <div *ngIf="form.gym.errors.maxlength">Level must be over 100 characters</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Level</label>
+                        <input type="text" formControlName="level" class="form-control" [ngClass]="{'is-invalid': submitted && form.level.errors}"
+                            placeholder="10">
+                        <div *ngIf="submitted && form.level.errors" class="invalid-feedback">
+                            <div *ngIf="form.level.errors.required">Level is required</div>
+                            <div *ngIf="form.level.errors.maxlength">Level must be over 15 characters</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer form-group">
+                    <button type="button" class="btn btn-secondary" (click)="cancel()">Cancel</button>
+                    <button type="submit" class="btn btn-primary" [disabled]="loading">Add Gymnast</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 <table class="table table-hover table-bordered">
     <thead class="thead">

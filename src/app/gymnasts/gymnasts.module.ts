@@ -6,6 +6,7 @@ import { GymnastNewComponent } from './gymnast-new/gymnast-new.component';
 import { GymnastEditComponent } from './gymnast-edit/gymnast-edit.component';
 import { GymnastDetailComponent } from './gymnast-detail/gymnast-detail.component';
 import { GymnastListComponent } from './gymnast-list/gymnast-list.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 const routes: Route[] = [
     { path: 'new', component: GymnastNewComponent },
@@ -23,6 +24,7 @@ const routes: Route[] = [
     ],
     imports: [
         CommonModule,
+        ReactiveFormsModule,
         RouterModule.forChild(routes)
     ]
 })

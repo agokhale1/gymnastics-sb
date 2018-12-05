@@ -4,6 +4,8 @@ import { ApiResponse } from 'src/app/shared/api-response.interface';
 import { config } from 'src/app/_services/config.interface';
 
 import { HttpClient, HttpResponse } from '@angular/common/http';
+import { AuthService } from 'src/app/_services/auth.service';
+import { AUTH_LEVEL, User } from 'src/app/shared/user.interface';
 
 @Component({
     selector: 'app-meet-list',
@@ -13,8 +15,13 @@ import { HttpClient, HttpResponse } from '@angular/common/http';
 export class MeetListComponent implements OnInit {
 
     meets: Meet[] = [];
+    private isNotGuest = false;
 
-    constructor(private http: HttpClient) {
+    constructor(private http: HttpClient, private authService: AuthService) {
+        this.authService.currentUser.subscribe((user: User) => {
+            this.isNotGuest = user !== null && user.auth_level > AUTH_LEVEL.GUEST;
+        });
+
         this.http.get<ApiResponse<Meet>>(`${config.apiUrl}/records/meets`)
         .subscribe((resp: ApiResponse<Meet>) => {
 

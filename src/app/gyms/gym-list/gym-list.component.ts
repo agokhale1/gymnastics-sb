@@ -3,6 +3,8 @@ import { Gym } from 'src/app/shared/gym.interface';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { config } from 'src/app/_services/config.interface';
 import { ApiResponse } from 'src/app/shared/api-response.interface';
+import { AUTH_LEVEL, User } from 'src/app/shared/user.interface';
+import { AuthService } from 'src/app/_services/auth.service';
 
 @Component({
     selector: 'app-gym-list',
@@ -12,8 +14,13 @@ import { ApiResponse } from 'src/app/shared/api-response.interface';
 export class GymListComponent implements OnInit {
 
     gyms: Gym[] = [];
+    private isNotGuest = false;
 
-    constructor(private http: HttpClient) {
+    constructor(private http: HttpClient, private authService: AuthService) {
+        this.authService.currentUser.subscribe((user: User) => {
+            this.isNotGuest = user !== null && user.auth_level > AUTH_LEVEL.GUEST;
+        });
+
         this.http.get<ApiResponse<Gym>>(`${config.apiUrl}/records/gyms`)
         .subscribe((resp: ApiResponse<Gym>) => {
 
