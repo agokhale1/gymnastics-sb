@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { User, AUTH_LEVEL, Roles } from 'src/app/shared/user.interface';
+import { User, Roles } from 'src/app/shared/user.interface';
 import { HttpClient, HttpResponse } from '@angular/common/http';
-import { AuthService } from 'src/app/_services/auth.service';
 import { config } from 'src/app/_services/config.interface';
 import { ApiResponse } from 'src/app/shared/api-response.interface';
 
@@ -16,7 +15,6 @@ export class UserListComponent implements OnInit {
     roles = Roles;
 
     constructor(private http: HttpClient) {
-
         this.http.get<ApiResponse<User>>(`${config.apiUrl}/records/users`)
         .subscribe((resp: ApiResponse<User>) => {
 
@@ -30,8 +28,7 @@ export class UserListComponent implements OnInit {
         });
     }
 
-    ngOnInit() {
-    }
+    ngOnInit() { }
 
     delete(id: number) {
         this.http.delete<HttpResponse<any>>(`${config.apiUrl}/records/users/${id}`, { observe: 'response' })
