@@ -7,7 +7,7 @@
     }
 
     // Turn on/off debug mode
-    $mode = ApiMode::Dev;
+    $mode = ApiMode::Prod;
 
     if ($mode <= ApiMode::Debug)
     {
