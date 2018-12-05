@@ -5570,7 +5570,7 @@ $config = new Config([
     'username' => $username,
     'password' => $password,
     'database' => $db_name,
-    'middlewares' => 'authorization, sanitation',
+    'middlewares' => 'authorization, sanitation, cors, cors.allowedOrigins("*")',
     'authorization.tableHandler' => function ($operation, $tableName) {
         global $auth;
 
