@@ -1,4 +1,4 @@
-<button *ngIf="isNotGuest" class="btn btn-dark material-icons" id="addGymnast" data-toggle="modal" data-target="#addGymnastModal">add</button>
+<button *ngIf="isNotGuest" class="btn btn-dark material-icons add-button" id="addGymnast" (click)="toggleModal()">add</button>
 
 <div class="modal fade" id="addGymnastModal" role="dialog">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -9,42 +9,43 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form [formGroup]="addGymnastForm" (ngSubmit)="addGymnast()">
+            <form [formGroup]="addGymnastForm" (ngSubmit)="create()">
                 <div class="modal-body">
                     <div class="form-group">
                         <label>First Name</label>
-                        <input type="text" formControlName="firstName" class="form-control" [ngClass]="{'is-invalid': submitted && form.firstName.errors}"
+                        <input type="text" formControlName="gymnast_first_name" class="form-control" [ngClass]="{'is-invalid': submitted && form.gymnast_first_name.errors}"
                             placeholder="John" autofocus>
-                        <div *ngIf="submitted && form.firstName.errors" class="invalid-feedback">
-                            <div *ngIf="form.firstName.errors.required">First name is required</div>
-                            <div *ngIf="form.firstName.errors.maxlength">Level must be over 25 characters</div>
+                        <div *ngIf="submitted && form.gymnast_first_name.errors" class="invalid-feedback">
+                            <div *ngIf="form.gymnast_first_name.errors.required">First name is required</div>
+                            <div *ngIf="form.gymnast_first_name.errors.maxlength">Level must be over 25 characters</div>
                         </div>
                     </div>
                     <div class="form-group">
                         <label>Last Name</label>
-                        <input type="text" formControlName="lastName" class="form-control" [ngClass]="{'is-invalid': submitted && form.lastName.errors}"
+                        <input type="text" formControlName="gymnast_last_name" class="form-control" [ngClass]="{'is-invalid': submitted && form.gymnast_last_name.errors}"
                             placeholder="Doe">
-                        <div *ngIf="submitted && form.lastName.errors" class="invalid-feedback">
-                            <div *ngIf="form.lastName.errors.required">Last name is required</div>
-                            <div *ngIf="form.lastName.errors.maxlength">Level must be over 35 characters</div>
+                        <div *ngIf="submitted && form.gymnast_last_name.errors" class="invalid-feedback">
+                            <div *ngIf="form.gymnast_last_name.errors.required">Last name is required</div>
+                            <div *ngIf="form.gymnast_last_name.errors.maxlength">Level must be over 35 characters</div>
                         </div>
                     </div>
                     <div class="form-group">
                         <label>Gym</label>
-                        <input type="text" formControlName="gym" class="form-control" [ngClass]="{'is-invalid': submitted && form.gym.errors}"
-                            placeholder="Brestyan's">
-                        <div *ngIf="submitted && form.gym.errors" class="invalid-feedback">
-                            <div *ngIf="form.gym.errors.required">Gym is required</div>
-                            <div *ngIf="form.gym.errors.maxlength">Level must be over 100 characters</div>
+                        <select formControlName="gym_id" class="form-control" [ngClass]="{'is-invalid': submitted && form.gym_id.errors}">
+                            <option *ngFor="let gym of gyms" value="{{ gym.gym_id }}" [selected]="currentGymnast && currentGymnast.gym_id === gym.gym_id">{{
+                                    gym.gym_name }}</option>
+                        </select>
+                        <div *ngIf="submitted && form.gym_id.errors" class="invalid-feedback">
+                            <div *ngIf="form.gym_id.errors.required">Gym is required</div>
                         </div>
                     </div>
                     <div class="form-group">
                         <label>Level</label>
-                        <input type="text" formControlName="level" class="form-control" [ngClass]="{'is-invalid': submitted && form.level.errors}"
+                        <input type="text" formControlName="gymnast_level" class="form-control" [ngClass]="{'is-invalid': submitted && form.gymnast_level.errors}"
                             placeholder="10">
-                        <div *ngIf="submitted && form.level.errors" class="invalid-feedback">
-                            <div *ngIf="form.level.errors.required">Level is required</div>
-                            <div *ngIf="form.level.errors.maxlength">Level must be over 15 characters</div>
+                        <div *ngIf="submitted && form.gymnast_level.errors" class="invalid-feedback">
+                            <div *ngIf="form.gymnast_level.errors.required">Level is required</div>
+                            <div *ngIf="form.gymnast_level.errors.maxlength">Level must be over 15 characters</div>
                         </div>
                     </div>
                 </div>
@@ -73,12 +74,11 @@
             <td class="text-center">{{ gymnast.gymnast_id }}</td>
             <td class="text-center">{{ gymnast.gymnast_first_name }}</td>
             <td class="text-center">{{ gymnast.gymnast_last_name }}</td>
-            <td class="text-center">{{ gymnast.gym.name }}</td>
+            <td class="text-center">{{ gymnast.gym_id.gym_name }}</td>
             <td class="text-center">{{ gymnast.gymnast_level }}</td>
             <td class="text-center">
-                <button [routerLink]="['view', gymnast.gymnast_id]" class="btn mr-2 material-icons">search</button>
-                <button [routerLink]="['edit', gymnast.gymnast_id]" class="btn mr-2 material-icons">edit</button>
-                <button class="btn material-icons">delete</button>
+                <button (click)="edit(gymnast.gymnast_id)" class="btn mt-1 mr-2 material-icons">edit</button>
+                <button (click)="delete(gymnast.gymnast_id)" class="btn mt-1 mr-2 material-icons">delete</button>
             </td>
         </tr>
     </tbody>

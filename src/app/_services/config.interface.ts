@@ -10,7 +10,7 @@ export let config: Config;
 
 config = {
     // apiUrl: 'http://localhost:8080/api/api.php'
-    apiUrl: 'http://gymscoreboard.tk/api',
+    apiUrl: 'https://gymscoreboard.tk/api',
     minUsernameLength: 3,
     minPasswordLength: 6
 };

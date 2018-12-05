@@ -39,6 +39,11 @@ const routes: Routes = [
         loadChildren: './users/users.module#UsersModule',
         canActivate: [AccessGuard],
         data: { requiredAuthLevel: AUTH_LEVEL.ADMIN }
+    },
+    {
+        path: '**',
+        redirectTo: '',
+        pathMatch: 'full'
     }
 ];
 
